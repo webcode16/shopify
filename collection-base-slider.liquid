@@ -1,20 +1,32 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.2.2/flickity.pkgd.min.js"></script>
+{{ 'quick-add.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
 {% assign featured_collection = section.settings.featured_collection %}
 {% assign products_per_view_desktop = section.settings.products_per_view_desktop %}
 {% assign products_per_view_mobile = section.settings.products_per_view_mobile %}
+{% assign sectionid = section.id | split: "__" | last | prepend: "section_" %}
+
+<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 
 <style>
+.main-carousel.flickity-enabled.is-draggable {
+    overflow: hidden;
+    margin-top: 20px;
+}
+  .flickity-slider{
+    position: relative;
+  }
 /* Carousel container */
 .featured-products {
     padding-top: 60px;
+    margin-bottom: 18px;
 }
-
 /* Individual carousel cells */
 .carousel-cell {
   width: calc(91% / {{ products_per_view_desktop }}); /* Adjust width based on number of products per view */
  // padding: 0 20px;
   box-sizing: border-box;
-      margin-right: 40px;
+  margin-right: 30px;
 }
 
 /* Image within carousel cell */
@@ -36,6 +48,39 @@
   font-size: 14px;
   margin: 5px 0;
 }
+.card-wrapper .position-quick.quick-add {
+    position: absolute !important;
+    right: 12px;
+    top: 60px;
+    z-index: 9;
+    width: 34px;
+    height: 34px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+.card-wrapper:hover .position-quick.quick-add{
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s;
+}
+.card-wrapper .position-quick.quick-add .quick-add__submit{
+  padding: 0;
+  min-height: 34px;
+}
+.card-wrapper .position-quick.quick-add .button--secondary:after{
+  --border-opacity: 0 !important;
+} 
+.card-wrapper .position-quick.quick-add .button--secondary:after {
+  box-shadow: none !important;
+} 
+.card-wrapper .position-quick.quick-add, .quick-add__submit{
+  border-radius: 50px !important;
+}
+product-recommendations.related-products .card-wrapper:hover .position-quick.quick-add:hover {
+    opacity: 0;
+    visibility: hidden;
+}  
 @media(max-width: 767px){
   .carousel-cell {
   width: calc(91% / {{ products_per_view_mobile }}); /* Adjust width based on number of products per view */
@@ -50,26 +95,38 @@
 </style>
 
 
-<div class="featured-products">
-  <div class="featured-pInner page-width">
-    <div class="Fhead">
-       <h3>{{ section.settings.Heading }}</h3>
+<div id="{{ sectionid }}" class="{{ section.settings.additional-class }} featured-products">
+  <div class="featured-pInner">
+  <div class="{% if section.settings.container == 'middle-container' %}page-width{% else %}container{% endif %}">  
+  <p class="smart-effect"><span class="day-hvover">{{ section.settings.day }}</span></p>
+    <div class="Fhead" {% if section.settings.show_arrow == true %}style="justify-content: space-between;"{% endif %}>
+       <h1>{{ section.settings.Heading }}</h1>  
+      {% if section.settings.button-position == 'front-of-heading' %}
+        <a href="{{ section.settings.button }}" class="view-more-btn front-of-heading">View All Products</a>
+      {% endif %} 
+    {% if section.settings.show_countdown == true %}  {% render 'count-down'  sectionid: sectionid; count-down-layout: section.settings.count-down-layout; %} {% endif %}
+    {% if section.settings.show_arrow == true %}
       <div class="Farrow">
         <button class="custom-prev-button">
-            <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.92579 11.2615C7.89964 11.2354 7.8789 11.2043 7.86475 11.1702C7.85059 11.1361 7.84331 11.0995 7.84331 11.0625C7.84331 11.0255 7.85059 10.9889 7.86475 10.9548C7.8789 10.9207 7.89964 10.8896 7.92579 10.8635L12.5081 6.28125L0.812279 6.28125C0.737687 6.28125 0.666149 6.25161 0.613405 6.19887C0.56066 6.14613 0.531029 6.07459 0.531029 6C0.531029 5.9254 0.56066 5.85387 0.613405 5.80112C0.666149 5.74838 0.737687 5.71875 0.812279 5.71875L12.5081 5.71875L7.92579 1.13648C7.89966 1.11035 7.87894 1.07933 7.86479 1.04519C7.85065 1.01104 7.84337 0.974451 7.84337 0.937496C7.84337 0.900541 7.85065 0.863948 7.86479 0.829806C7.87894 0.795664 7.89966 0.764642 7.92579 0.738511C7.95193 0.71238 7.98295 0.691652 8.01709 0.67751C8.05123 0.663368 8.08782 0.65609 8.12478 0.65609C8.16173 0.65609 8.19833 0.663368 8.23247 0.67751C8.26661 0.691652 8.29763 0.71238 8.32376 0.738511L13.3863 5.80101C13.4124 5.82713 13.4332 5.85815 13.4473 5.89229C13.4615 5.92644 13.4687 5.96304 13.4687 6C13.4687 6.03696 13.4615 6.07356 13.4473 6.1077C13.4332 6.14184 13.4124 6.17286 13.3863 6.19898L8.32376 11.2615C8.29764 11.2876 8.26662 11.3084 8.23248 11.3225C8.19834 11.3367 8.16174 11.344 8.12478 11.344C8.08782 11.344 8.05122 11.3367 8.01708 11.3225C7.98293 11.3084 7.95191 11.2876 7.92579 11.2615Z" fill="white"/>
+            <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="23" cy="23" r="23" fill="#F5F5F5"/>
+            <path d="M22 16L15 23L22 30M15 23H31" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
         <button class="custom-next-button">
-          <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.92579 11.2615C7.89964 11.2354 7.8789 11.2043 7.86475 11.1702C7.85059 11.1361 7.84331 11.0995 7.84331 11.0625C7.84331 11.0255 7.85059 10.9889 7.86475 10.9548C7.8789 10.9207 7.89964 10.8896 7.92579 10.8635L12.5081 6.28125L0.812279 6.28125C0.737687 6.28125 0.666149 6.25161 0.613405 6.19887C0.56066 6.14613 0.531029 6.07459 0.531029 6C0.531029 5.9254 0.56066 5.85387 0.613405 5.80112C0.666149 5.74838 0.737687 5.71875 0.812279 5.71875L12.5081 5.71875L7.92579 1.13648C7.89966 1.11035 7.87894 1.07933 7.86479 1.04519C7.85065 1.01104 7.84337 0.974451 7.84337 0.937496C7.84337 0.900541 7.85065 0.863948 7.86479 0.829806C7.87894 0.795664 7.89966 0.764642 7.92579 0.738511C7.95193 0.71238 7.98295 0.691652 8.01709 0.67751C8.05123 0.663368 8.08782 0.65609 8.12478 0.65609C8.16173 0.65609 8.19833 0.663368 8.23247 0.67751C8.26661 0.691652 8.29763 0.71238 8.32376 0.738511L13.3863 5.80101C13.4124 5.82713 13.4332 5.85815 13.4473 5.89229C13.4615 5.92644 13.4687 5.96304 13.4687 6C13.4687 6.03696 13.4615 6.07356 13.4473 6.1077C13.4332 6.14184 13.4124 6.17286 13.3863 6.19898L8.32376 11.2615C8.29764 11.2876 8.26662 11.3084 8.23248 11.3225C8.19834 11.3367 8.16174 11.344 8.12478 11.344C8.08782 11.344 8.05122 11.3367 8.01708 11.3225C7.98293 11.3084 7.95191 11.2876 7.92579 11.2615Z" fill="white"/>
-            </svg>
+         <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="23" cy="23" r="23" fill="#F5F5F5"/>
+          <path d="M14.5 23H31M31 23L24 16M31 23L24 30" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
+     {% endif %}         
     </div>
-    <div class="main-carousel"
+  </div>
+    <div class="main-carousel {% if section.settings.container == 'middle-container' %}page-width{% else %}container{% endif %}"
          data-desktop-views="{{ products_per_view_desktop }}"
-         data-mobile-views="{{ products_per_view_mobile }}">
+         data-mobile-views="{{ products_per_view_mobile }}"
+         autoplay="{{ section.settings.autoplay }}">
       {% for product in collections[featured_collection].products limit: 6 %}
         <div class="carousel-cell">
               {% render 'card-product',
@@ -85,50 +142,63 @@
         </div>
       {% endfor %}
     </div>
+    {% if section.settings.button-position == 'bottom' %}
+      <a href="{{ section.settings.button }}" class="view-more-btn bottom">View All Products</a>
+    {% endif %}  
   </div>
   
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.2.2/flickity.pkgd.min.js"></script>
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Flickity
-    var flkty = new Flickity('.main-carousel', {
-      // options
-      cellAlign: 'left',
-      contain: true,
-      // wrapAround: true,
-      prevNextButtons: false,
-      pageDots: false,
-      // Set number of products per view based on device
-      cellSelector: '.carousel-cell',
-      slidesToShow: parseInt(document.querySelector('.main-carousel').getAttribute('data-desktop-views')),
-      responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: parseInt(document.querySelector('.main-carousel').getAttribute('data-mobile-views')),
-            prevNextButtons: false,
-            pageDots: true
-          }
+    var mainCarousel = document.querySelector('#{{ sectionid }} .main-carousel');
+
+  // Convert autoplay attribute to a boolean
+  var autoplay = mainCarousel.getAttribute('autoplay') === 'true';
+  // Initialize Flickity
+  var flkty = new Flickity('#{{ sectionid }} .main-carousel', {
+    infinite: true,
+    cellAlign: 'left',
+    contain: true,
+    slidesToScroll: 1,
+    autoPlay: autoplay,
+    autoplaySpeed: 1000,
+    wrapAround: true,
+    prevNextButtons: false,
+    pageDots: false,
+    // Set number of products per view based on device
+    cellSelector: '#{{ sectionid }} .carousel-cell',
+    slidesToShow: parseInt(document.querySelector('#{{ sectionid }} .main-carousel').getAttribute('data-desktop-views')),
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: parseInt(document.querySelector('#{{ sectionid }} .main-carousel').getAttribute('data-mobile-views')),
+          prevNextButtons: false,
+          pageDots: true
         }
-      ]
-    });
+      }
+    ]
+  });
 
-
-   // Custom previous button event
-    var prevButton = document.querySelector('.custom-prev-button');
+  // Custom previous button event
+  var prevButton = document.querySelector('#{{ sectionid }} .custom-prev-button');
+  if (prevButton) {
     prevButton.addEventListener('click', function () {
       flkty.previous();
     });
+  }
 
-    // Custom next button event
-    var nextButton = document.querySelector('.custom-next-button');
+  // Custom next button event
+  var nextButton = document.querySelector('#{{ sectionid }} .custom-next-button');
+  if (nextButton) {
     nextButton.addEventListener('click', function () {
       flkty.next();
     });
+  }
+});
 
-    
-  });
 </script>
 
 
@@ -138,9 +208,62 @@
   "name": "Featured Products New",
   "settings": [
     {
+      "type": "select",
+      "id": "container",
+      "label": "Section Container",
+      "options": [
+      {
+        "value": "middle-container",
+        "label": "Middle Container"
+      },
+      {
+        "value": "small-container",
+        "label": "Small Container"
+      }
+  ],
+},
+    {
+      "type": "text",
+      "id": "day",
+      "label": "Day"
+    },
+    {
       "type": "text",
       "id": "Heading",
       "label": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show Count Down",
+      "default": false
+    },
+     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show Arrow",
+      "default": false
+    },
+    {
+        "type": "select",
+        "id": "count-down-layout",
+        "label": "Choose Count Down Layout",
+        "options": [
+          {
+            "value": "layout-1",
+            "label": "layout-1"
+          },
+          {
+            "value": "layout-2",
+            "label": "layout-2"
+          }
+        ],
     },
     {
       "type": "range",
@@ -165,7 +288,26 @@
       "id": "featured_collection",
       "label": "Featured Collection"
     },
-
+    {
+      "type": "url",
+      "id": "button",
+      "label": "Button"
+    },
+    {
+      "type": "select",
+      "id": "button-position",
+      "label": "Button Position",
+      "options": [
+      {
+        "value": "front-of-heading",
+        "label": "Front of Heading"
+      },
+      {
+        "value": "bottom",
+        "label": "Bottom"
+      }
+  ],
+},
   {
       "type": "header",
       "content": "t:sections.featured-collection.settings.header.content"
@@ -250,11 +392,11 @@
       "label": "t:sections.featured-collection.settings.show_rating.label",
       "info": "t:sections.featured-collection.settings.show_rating.info"
     },
-    {
-      "type": "checkbox",
-      "id": "enable_quick_add",
-      "default": false,
-      "label": "t:sections.featured-collection.settings.enable_quick_buy.label"
+     {
+      "type": "text",
+      "id": "additional-class",
+      "label": "Additional Class",
+       "info": "Only for developers"
     }
     
   ],
