@@ -1,0 +1,65 @@
+{% comment %}
+{% render 'ratings',
+  card_product: product
+%}
+{% endcomment %}
+<style>
+  :root {
+  --star-size: 34px;
+  --star-color: #bfbfbf;
+  --star-background: #FFAD33;
+}
+.main-rating-star {
+    display: flex;
+    align-items: center;
+}  
+div.Stars {
+  --percent: calc(var(--rating) / 5 * 100%);
+  display: inline-block;
+  font-size: var(--star-size);
+  /* font-family: Times; // make sure ★ appears correctly */
+  line-height: 1;
+  margin: 0;
+  height: 20px;
+  margin-top: -15px;
+  
+  &::before {
+    content: '★★★★★';
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+@media(max-width: 989px){
+  div.Stars {
+  &::before {
+    font-size: 24px !important;
+  }
+}
+.card__information .main-rating-star {
+    margin-top: 0;
+}  
+.main-rating-star span {
+    font-size: 14px !important;
+    margin-top: 8px;
+}
+}  
+@media(max-width: 768px){
+  div.Stars {
+  &::before {
+    font-size: 20px !important;
+  }
+}  
+.main-rating-star span {
+    font-size: 12px !important;
+}
+}  
+</style>
+{% assign reviews = card_product.metafields.custom.reviews.value %}
+{% if reviews %} 
+<div class="main-rating-star {% for reviews in card_product.metafields.custom.reviews.value %}{{ reviews }}{% endfor %};">
+  <div class="Stars" style="--rating: {{ reviews[0] }};" aria-label="Rating of this product is 2.3 out of 5."></div>
+  <span>({{ reviews[1] }})</span>
+</div>
+{% endif %}    
