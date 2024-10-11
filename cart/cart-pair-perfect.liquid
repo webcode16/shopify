@@ -1,0 +1,66 @@
+ <div class="main-cart-pair-perfect" style="opacity: 0;">
+        <p class="heading">Perfect Pairing</p>
+        <div class="main-cart-perfect-pairing">
+          <div class="content">
+            <div class="slider">
+              {% for product in settings.cart-product-list %}
+                <div class="image">
+                  <div class="cart-perfect-pairing">
+                    <a href="{{ product.url }}">
+                    <div class="feautred-image">
+                      <img src="{{ product.featured_image | img_url: ' ' }}" alt="product-image">
+                    </div>
+                    <div class="product-content">
+                      <p class="product-title">{{ product.title }}</p>
+                      <p class="product-price">{{ product.price | money_with_currency }}</p>
+                      <button class="pair-add-to-cart">Add <input name="id" value="{{ product.variants[0].id }}" type="hidden"></button>
+
+                      
+                    </div> 
+                    </a>
+                  </div>  
+                 </div> 
+              {% endfor %}
+            </div> 
+             <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+              <span class="slider__label sr-only"></span>
+            </div>
+          </div>          
+        </div>
+      </div> 
+      <script>
+$(document).ready(function() {
+  setTimeout(function(){
+      $('.main-cart-pair-perfect').css('opacity', '1');
+    },4000);
+}); 
+        
+// $(document).ready(function() {
+//   var $slider = $('.main-cart-pair-perfect .slider');
+//   var $progressBar = $('.main-cart-pair-perfect .progress');
+//   var $progressBarLabel = $( '.main-cart-pair-perfect .slider__label' );
+  
+//   $slider.on('beforeChange', function(event, slick, currentSlide, nextSlide) {   
+//     var calc = ( (nextSlide) / (slick.slideCount-1) ) * 100;
+    
+//     $progressBar
+//       .css('background-size', calc + '% 100%')
+//       .attr('aria-valuenow', calc );
+    
+//     $progressBarLabel.text( calc + '% completed' );
+//   });
+  
+//   $slider.slick({
+//             slidesToShow: 3.2,
+//             speed: 400,
+//            responsive: [
+//           {
+//             breakpoint: 768, 
+//             settings: {
+//                 slidesToShow: 1
+//             }
+//         }
+//         ]
+//         });  
+// });
+      </script>
