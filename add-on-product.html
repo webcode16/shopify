@@ -1,29 +1,73 @@
 <style>
-    .under-complete-the-look .product-inr-pair img {
-      width: 100%;
+  .under-complete-the-look .product-inr-pair img {
+    width: 100%;
+    height: 100%;
+}
+  .product .complete-the-look .heading {
+    font-size: 20px;
+    color: #000;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+  .product-inr-pair {
+    display: flex;
+    border-bottom: 1px solid #ececec;
+    padding: 20px 0;
+}
+  .under-main-content{
+    display: flex;
+    align-items: start;
+    column-gap: 10px;
+    justify-content: space-between;
   }
-    .product .complete-the-look .heading {
-      font-size: 20px;
-      color: #000;
-      letter-spacing: .11em;
-      text-transform: uppercase;
+  .main-featured-image {
+    width: 134px;
+    height: 134px;
+}
+  .under-main-content .title{
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 600;
   }
-    .product-inr-pair {
-      display: flex;
+  
+.product-inr-pair{
+  column-gap: 20px;
+}
+.under-complete-the-look .under-main-content .price{
+  margin: 0;
+  width: 30%;
+  display: block;
+  margin-top: 4px;
+  text-align: end;
+}
+.under-complete-the-look span.transcy-money{
+    font-size: 14px !important;
   }
-    .under-main-content{
-      display: flex;
-      align-items: center;
-    }
-    .main-featured-image {
-      width: 150px;
-      height: 150px;
+.under-complete-the-look select{
+    width: 100%;
+    height: 36px;
+    margin-top: 9px;
   }
-    .under-main-content .title{
-      margin: 0;
-    }
-  </style>
-  <div class="complete-the-look">
+.under-complete-the-look select:focus-visible{
+  outline: none;
+  outline-offset: none;
+  box-shadow: none;
+  }
+  button.addbasket {
+    background: transparent;
+    border: 1px solid #ececec;
+    width: 100%;
+    padding: 9.5px 0;
+    margin-top: 10px;
+}
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 65%;
+}
+</style>  <div class="complete-the-look">
           <p class="heading">Complete the Look</p>  
           <div class="under-complete-the-look">
             {%- assign total_price = 0 -%}
@@ -44,6 +88,10 @@
                        <option value="{{ variant.id }}">{{ variant.title }}</option>
                     {%- endfor -%}
                   </select>
+                    <button class="addbasket">
+                        Add to bag
+                        <input name="id" value="{{ product.selected_or_first_available_variant.id }}" type="hidden">
+                     </button>  
                 </div>
               </div>
                <button class="addbasket">
@@ -84,6 +132,7 @@
         $.ajax({
           type: 'POST',
           url: '/cart/add',
+// this {data} is bulk button and when you add each product button then you remove  productIds[1],  productIds[2] and  productIds[3].
           data: {
             'items': [{
               'id': productIds[0],
