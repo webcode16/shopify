@@ -1,0 +1,175 @@
+<<<< start: product-media-gallery.liquid >>>>
+
+{%- liquid
+  if section.settings.enable_group_media
+    assign optionNames = 'color,Color' | split: ','
+    assign option_name_present = false
+    assign image_positions = ''
+    assign group_values = ''
+    for option in optionNames
+      for product_option in product.options
+        if option == product_option
+          assign option_index = forloop.index0
+          assign option_name_present = true
+          break
+        endif
+      endfor
+    endfor
+    if option_name_present
+      for variant in product.variants
+        assign group_values_arr = group_values | split: ','
+        assign value_already_present = false
+        for value in group_values_arr
+          if value == variant.options[option_index]
+            assign value_already_present = true
+            break
+          endif
+        endfor
+        unless value_already_present
+          assign group_values = group_values | append: variant.options[option_index] | append: ','
+          assign image_positions = image_positions | append: variant.featured_media.position | append: ','
+        endunless
+      endfor
+      assign image_positions = image_positions | split: ','
+      assign group_values = group_values | split: ','
+      assign group_values_size = image_positions.size | minus: 1
+      assign data_group_arr = ''
+      for media in product.media
+        for i in (0..group_values_size)
+          if i == 0
+            assign start_position = 1
+          else
+            assign start_position = image_positions[i] | plus: 0
+          endif
+          assign end_index = i | plus: 1
+          assign end_position = image_positions[end_index] | default: 9999 | plus: 0
+          if media.position >= start_position and media.position < end_position
+            assign data_group_arr = data_group_arr | append: group_values[i] | append: ','
+          endif
+        endfor
+      endfor
+      assign data_group_arr = data_group_arr | split: ','
+    endif
+  endif
+-%}
+ 
+//  Paste This attribute in li or image  
+
+data-color-contain="{{data_group_arr[forloop.index0]}}"
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  const firstInput = document.querySelector('.only-color input[name="Color"]');
+  if (firstInput) {
+    setTimeout(() => {
+      firstInput.click();
+      }, 500);
+  }
+    document.body.addEventListener('click', function(event) {
+        if (event.target.matches('.only-color input')) {
+            var inputCValue = event.target.value;
+            var thumbnails = document.querySelectorAll('.product .thumbnail-slider ul li');
+            thumbnails.forEach(function(thumbnail) {
+                thumbnail.style.display = 'none';
+            });
+            var matchingThumbnails = document.querySelectorAll('.product .thumbnail-slider ul li[data-color-contain="'+inputCValue+'"]');
+            matchingThumbnails.forEach(function(thumbnail) {
+                thumbnail.style.display = 'block';
+            });
+        }
+    });
+});
+
+
+</script>
+
+<<<< end: product-media-gallery.liquid >>>>
+
+<<<<< start: card-product.liquid >>>>  
+
+
+// replace this code deafult media images
+
+     {% assign variant_images = card_product.variants | map: 'image' | compact %}
+          <div class="product-image">
+            {% assign counter = 1 %}
+
+            {% assign variant_image_srcs = '' | split: '' %}
+            {% assign additional_image_displayed = false %}
+
+           {% for image in card_product.images %}
+            {% if variant_images contains image.src %}
+              <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}" class="have-thumbnail-variant">
+              {% assign variant_image_srcs = variant_image_srcs | append: image.src %}  <!-- Store displayed variant images -->
+            {% elsif additional_image_displayed == false %}
+              <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}">
+            
+            {% endif %}
+          {% endfor %}
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", (event) => {
+
+document.querySelectorAll('.extra_option').forEach(option => {
+    option.querySelectorAll('.color-swatch').forEach((label, index) => {
+      label.addEventListener('click', () => {
+        console.log('Selected index in extra_option:', index);
+
+
+      let wrp = label.closest('.card-wrapper');
+
+      let variantImages = wrp.querySelectorAll('.product-image .have-thumbnail-variant');
+      let AllImages = wrp.querySelectorAll('.product-image img');
+
+        // Hide all variant images
+        AllImages.forEach((img, imgIndex) => {
+          img.style.display = 'none'; // Hide all images
+        });
+
+        if (variantImages[index]) {
+          variantImages[index].style.display = 'block';
+        }
+
+        let currentImageDisplayed = Array.from(AllImages).find(img => img.style.display === 'block');
+
+        if (currentImageDisplayed) {
+          let currentIndex = Array.from(AllImages).indexOf(currentImageDisplayed);
+          if (AllImages[currentIndex + 1]) {
+            AllImages[currentIndex + 1].style.display = 'block'; // Show the next image
+          } else {
+            currentImageDisplayed.classList.add('no-hover');
+          }
+        }
+
+    
+      });
+    });
+  });
+
+});
+</script>
+
+
+
+
+
+<<<<< end: card-product.liquid >>>> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
