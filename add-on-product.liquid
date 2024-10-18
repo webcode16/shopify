@@ -120,13 +120,22 @@
    setTimeout(function(){
     $('.addbasket').on('click', function() {
      let productIds = [];
-      $(this).find('input[name="id"]').each(function() {
+      <<
+       var productId = $(this).siblings('select').val(); ----- this is only when you apply each product button 
+        productIds.push(productId); 
+        console.log(productId);
+        addToCart(productIds);   
+      >>
+      <<
+      $(this).find('input[name="id"]').each(function() {  ------ this is only when you use add bulk product button
         var productId = $(this).val();
           productIds.push(productId);
           console.log(productId);
        });
         addToCart(productIds);
+      >>
     });
+
     
     function addToCart(productIds) {
         $.ajax({
