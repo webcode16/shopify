@@ -1,0 +1,83 @@
+{% stylesheet %}
+.preloader .loader {
+border: 3px solid #f3f3f3;
+    border-top: 3px solid #000;
+    border-radius: 50%;
+    width: 122px;
+    height: 122px;
+    animation: spin 2s linear infinite;
+    display: block;
+    position: absolute;
+    margin-left: -20px;
+    margin-top: -25px;
+      
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+}
+.preloader {
+    z-index: 99 !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shopify-section.shopify-section-group-header-group .preloader {
+    z-index: 99 !important;
+}
+.preloader .loading-text{
+    max-width: 80px;
+  }
+  .preloader .loading-text img{
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% if section.settings.enable_preloading %}
+<!-- The preloader HTML -->
+<div class="preloader">
+    <div class="loading-text" style="font-size: 48px; color: white;">
+        <div class="loader" id="loader"></div>
+        <img src="{{ section.settings.preloader_img | img_url: 'master' }}" alt="Loading">
+    </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Pre Loader",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "enable_preloading",
+            "default": false,
+            "label": "Enable Preloader"
+        },
+        {
+            "type": "image_picker",
+            "id": "preloader_img",
+            "label": "Preloader Image"
+        }
+    ],
+  "presets": [
+    {
+      "name": "Pre Loader"
+    }
+  ]
+}
+{% endschema %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+{% javascript %}
+jQuery(window).on("load", function () {
+    jQuery('.preloader').fadeOut(1000);
+});
+{% endjavascript %}
