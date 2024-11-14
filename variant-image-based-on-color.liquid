@@ -1,7 +1,6 @@
 <<<< start: product-media-gallery.liquid >>>>
 
 {%- liquid
-  if section.settings.enable_group_media
     assign optionNames = 'color,Color' | split: ','
     assign option_name_present = false
     assign image_positions = ''
@@ -50,7 +49,6 @@
       endfor
       assign data_group_arr = data_group_arr | split: ','
     endif
-  endif
 -%}
  
 //  Paste This attribute in li or image  
