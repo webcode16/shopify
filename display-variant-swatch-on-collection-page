@@ -1,5 +1,6 @@
--------Point is define in description-------
-<<<<<<<<<<<<  1 point >>>>>>>>>>>>> 
+<<<<<<<<<<<<  1 point  >>>>>>>>>>>>> 
+----- display image according to variant color ----
+
 <div class="card-product-color-variant">
            {% assign displayed_colors = '' %} 
                 <div class="color-swatch-images" style="display: none;">
@@ -31,6 +32,7 @@ $(document).ready(function(){
 </script>
 
 <<<<<<<<<<<<  2 point >>>>>>>>>>>>> 
+----- link color according to variant  ----
 <div class="color-swatch-variant">
     {% assign displayed_colorrs = '' %} 
   {% for option in card_product.options_with_values %}
