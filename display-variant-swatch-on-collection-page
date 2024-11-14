@@ -1,6 +1,6 @@
- <div class="card-product-color-variant">
-            
-           {% comment %} 
+-------Point is define in description-------
+<<<<<<<<<<<<  1 point >>>>>>>>>>>>> 
+<div class="card-product-color-variant">
            {% assign displayed_colors = '' %} 
                 <div class="color-swatch-images" style="display: none;">
             {% for variant in card_product.variants %}
@@ -20,7 +20,17 @@
               {% endif %}
             {% endfor %}
            </div>
-  {% endcomment %}
+<script>
+$(document).ready(function(){
+    $('.color-swatch-variant > span.value-option-s').on('click', function() {
+        var index = $(this).index();
+        var imageHref = $('.color-swatch-images img').eq(index).attr('src');
+        jQuery('.card__media .media a img:first-child').attr('srcset', imageHref);
+    });
+});
+</script>
+
+<<<<<<<<<<<<  2 point >>>>>>>>>>>>> 
 <div class="color-swatch-variant">
     {% assign displayed_colorrs = '' %} 
   {% for option in card_product.options_with_values %}
