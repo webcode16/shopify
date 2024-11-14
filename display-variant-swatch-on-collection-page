@@ -1,0 +1,42 @@
+ <div class="card-product-color-variant">
+            
+           {% comment %} 
+           {% assign displayed_colors = '' %} 
+                <div class="color-swatch-images" style="display: none;">
+            {% for variant in card_product.variants %}
+              {% assign color = variant.options[0] %} 
+              {% unless displayed_colors contains color %}
+                  <img src="{{ variant.featured_image | img_url: ' ' }}" alt="{{ color }}" />
+                {% assign displayed_colors = displayed_colors | append: color | append: ',' %} 
+              {% endunless %}
+            {% endfor %}
+                </div>
+          <div class="color-swatch-variant">            
+            {% for option in card_product.options_with_values %}
+              {% if option.name == 'Color' %} 
+                {% for value in option.values %}
+                 <a href="{{ card_product.url }}?variant={{ value.id }}"> <span class="value-option-s" data-var-image="{{ value }}" style="background: {{ value.swatch.color }}; width: 20px; height: 20px; display: block;"></span></a>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+           </div>
+  {% endcomment %}
+<div class="color-swatch-variant">
+    {% assign displayed_colorrs = '' %} 
+  {% for option in card_product.options_with_values %}
+    {% if option.name == 'Color' %}
+      {% for value in option.values %}
+        {% assign color_variant = card_product.variants | where: "option1", value %}
+        {% for variant in color_variant %}
+             {% assign color = variant.options[0] %} 
+             {% unless displayed_colorrs contains color %}
+              <a href="{{ card_product.url }}?variant={{ variant.id }}">
+                <span class="value-option-s" data-var-image="{{ value }}" style="background: {{ value.swatch.color }}; width: 20px; height: 20px; display: block;"></span>
+              </a>
+              {% assign displayed_colorrs = displayed_colorrs | append: color | append: ',' %} 
+                {% endunless %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</div>
