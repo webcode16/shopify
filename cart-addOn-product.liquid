@@ -1,0 +1,174 @@
+ <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+ <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+ <style>
+ .main-cart-pair-perfect .my-slider-progress {
+    background: #F8F8F8;
+    margin-top: 22px;
+    height: 8px;
+   border-radius: 100px;
+   max-width: 540px;
+  }
+  
+  .main-cart-pair-perfect .my-slider-progress-bar {
+    background: #D9D9D9;
+    height: 8px;
+    transition: width 400ms ease;
+    width: 0;
+    border-radius: 100px;
+     max-width: 540px;
+  }
+  .main-cart-pair-perfect .splide__arrow {
+     margin-top: -22px;
+   }
+</style>
+ <div class="main-cart-pair-perfect" >
+        <p class="heading">Perfect Pairing:</p>
+        <div class="main-cart-perfect-pairing">
+          <div class="content">
+
+  
+
+<div class="splide">
+  <div class="splide__track">
+    <ul class="splide__list">
+        {% for product in settings.cart-product-list %}
+           <li class="splide__slide">
+                <div class="image">
+                  <div class="cart-perfect-pairing">
+                    <a href="{{ product.url }}">
+                    <div class="feautred-image">
+                      <img src="{{ product.featured_image | img_url: ' ' }}" alt="product-image">
+                    </div>
+                    <div class="product-content">
+                      <p class="product-title">{{ product.title }}</p>
+                      <p class="product-price">{{ product.price | money_with_currency }}</p>
+                      <button class="pair-add-to-cart">Add <input name="id" value="{{ product.variants[0].id }}" type="hidden"></button>
+
+                      
+                    </div> 
+                    </a>
+                  </div>  
+                 </div> 
+          </li>
+              {% endfor %}
+    </ul>
+  </div>
+  
+  <!-- Add the progress bar element -->
+  <div class="my-slider-progress">
+    <div class="my-slider-progress-bar" style="display: block;"></div>
+  </div>
+</div>
+            
+      {% comment %}
+            <div class="slider">
+              {% for product in settings.cart-product-list %}
+                <div class="image">
+                  <div class="cart-perfect-pairing">
+                    <a href="{{ product.url }}">
+                    <div class="feautred-image">
+                      <img src="{{ product.featured_image | img_url: ' ' }}" alt="product-image">
+                    </div>
+                    <div class="product-content">
+                      <p class="product-title">{{ product.title }}</p>
+                      <p class="product-price">{{ product.price | money_with_currency }}</p>
+                      <button class="pair-add-to-cart">Add <input name="id" value="{{ product.variants[0].id }}" type="hidden"></button>
+
+                      
+                    </div> 
+                    </a>
+                  </div>  
+                 </div> 
+              {% endfor %}
+            </div> 
+            {% endcomment %}
+             <!-- <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+              <span class="slider__label sr-only"></span>
+            </div> -->
+          </div>          
+        </div>
+      </div> 
+
+
+
+
+
+ <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <!-- Include the auto-scroll extension -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
+
+  <script>
+       setTimeout(function(){
+         
+       
+      // Initialize Splide
+      var splide = new Splide('.splide', {
+        type       : 'loop',
+        perPage    : 3,
+        autoScroll : {
+          pauseOnHover: false, // Optionally, set to true to pause on hover
+          speed       : 0.2, // Adjust the speed of auto-scrolling
+        },
+         breakpoints : {
+          767: {
+            perPage    : 1,
+          },
+        },
+      });
+
+      // Mount the Splide instance and then proceed with progress bar functionality
+      splide.on('mounted', function () {
+        var bar = splide.root.querySelector('.my-slider-progress-bar');
+        
+        // Ensure the progress bar exists before updating
+        if (bar) {
+          // Update the progress bar width on "mounted" and "move"
+          splide.on('move', function () {
+            var end  = splide.Components.Controller.getEnd();  // Get total number of slides
+            var rate = Math.min((splide.index + 1) / end, 1);  // Calculate the rate (percentage) of progress
+            bar.style.width = `${100 * rate}%`;  // Update the width of the progress bar
+          });
+        }
+      });
+
+      // Mount the Splide instance
+      splide.mount();
+         }, 1000);
+  </script>
+      
+      <script>
+// $(document).ready(function() {
+//   setTimeout(function(){
+//       $('.main-cart-pair-perfect').css('opacity', '1');
+//     },4000);
+// }); 
+        
+// $(document).ready(function() {
+//   var $slider = $('.main-cart-pair-perfect .slider');
+//   var $progressBar = $('.main-cart-pair-perfect .progress');
+//   var $progressBarLabel = $( '.main-cart-pair-perfect .slider__label' );
+  
+//   $slider.on('beforeChange', function(event, slick, currentSlide, nextSlide) {   
+//     var calc = ( (nextSlide) / (slick.slideCount-1) ) * 100;
+    
+//     $progressBar
+//       .css('background-size', calc + '% 100%')
+//       .attr('aria-valuenow', calc );
+    
+//     $progressBarLabel.text( calc + '% completed' );
+//   });
+  
+//   $slider.slick({
+//             slidesToShow: 3.2,
+//             speed: 400,
+//            responsive: [
+//           {
+//             breakpoint: 768, 
+//             settings: {
+//                 slidesToShow: 1
+//             }
+//         }
+//         ]
+//         });  
+// });
+      </script>
