@@ -1,0 +1,240 @@
+
+
+    <!-- Swiper CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.1/css/swiper.min.css" rel="stylesheet">
+
+    <style>
+        @media only screen and (min-width: 750px) {
+            /* .swiper-wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                column-gap: var(--grid-desktop-horizontal-spacing);
+            } */
+        }
+/* .c-product__img{
+  max-width: 319px;
+      line-height: 0;
+} */
+      .main-recently-views-p:hover .swiper-button-prev, .main-recently-views-p:hover .swiper-button-next{
+            opacity: 1 !important;
+            visibility: visible;
+      }
+      .main-recently-views-p .swiper-button-prev.swiper-button-disabled{
+          opacity: 0;
+          visibility: hidden;
+      }
+      .main-recently-views-p.container-featured-collection .swiper-container{
+        padding-bottom: 30px !important;
+      }
+        @media only screen and (max-width: 576px) {
+            .c-product img {
+                height: 230px !important;
+            }
+        }
+
+        .recently-title h2 {
+            font-size: 28px;
+            border-top: 1px solid #d2d2d2;
+            padding-top: 50px;
+            opacity: 1;
+        }
+
+        .c-product {
+            cursor: pointer;
+        }
+
+        .c-product img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            height: 358.88px;
+          
+        }
+
+        .c-product p.c-productPrice {
+            line-height: 0px;
+            color: #000;
+        }
+
+        .c-product h3.c-product__title {
+            line-height: 1;
+            padding-bottom: 10px;
+        }
+
+        .c-product h3.c-product__title a {
+            color: black;
+            text-decoration: none;
+            color: #000;
+            text-decoration: none !important;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        a.c-product__url {
+            position: relative;
+        }
+
+        /* Swiper Button Styles */
+        /* .swiper-button-next, .swiper-button-prev {
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            padding: 10px;
+        } */
+    </style>
+
+
+<div id="main-{{ section.id }}" class="main-recently-views-p container-featured-collection featured-collections-main-grid">
+    <div class="recently-title">
+        <h2 class="title inline-richtext h2 scroll-trigger animate--slide-in">Recently Viewed</h2>
+    </div>
+
+    <div class="swiper-container swiperid-{{ section.id }}">
+        <div class="swiper-wrapper">
+            <!-- Slides will be injected here by JavaScript -->
+        </div>
+      <div class="swiper-pagination"></div> 
+        <!-- Swiper Navigation -->
+        <div class="swiper-button-next">
+          <svg aria-hidden="true" focusable="false" fill="none" width="16" class="icon icon-arrow-right  icon--direction-aware" viewBox="0 0 16 18">
+              <path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"></path>
+            </svg>
+        </div>
+        <div class="swiper-button-prev">
+          <svg aria-hidden="true" focusable="false" fill="none" width="16" class="icon icon-arrow-left  icon--direction-aware" viewBox="0 0 16 18">
+                <path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"></path>
+              </svg>
+          </div>
+    </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.1/js/swiper.min.js"></script>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+<script>
+    // Function to set Recently Viewed Products in localStorage
+    function setRecentlyViewedPdp() {
+        const pdpData = {
+            productTitle: "{{ product.title }}",
+            productImg: "{{ product.featured_image | img_url: '' }}",
+            productPrice: "{{ product.price | money | remove_first: '' }}",
+            productUrl: "{{ product.url }}"
+        };
+
+        const productArr = [];
+        const numberOfProduct = 8;
+
+        // Add current product to the product array
+        productArr.push(pdpData);
+        const currPdpTitle = pdpData.productTitle;
+        const pdpDataString = JSON.stringify(productArr);
+        const localData = localStorage.getItem('recently_viewed');
+
+        if (localData == null) {
+            localStorage.setItem('recently_viewed', pdpDataString);
+        } else if (localData != null) {
+            const oldPdpData = localStorage.getItem('recently_viewed');
+            const countPdpData = (oldPdpData.match(/productTitle/g) || []).length;
+            const reVisitPdp = oldPdpData.includes(currPdpTitle);
+
+            if (countPdpData < numberOfProduct && !reVisitPdp) {
+                const jsonResp = JSON.parse(oldPdpData);
+                jsonResp.push(pdpData);
+                localStorage.setItem('recently_viewed', JSON.stringify(jsonResp));
+            } else if (countPdpData >= numberOfProduct && !reVisitPdp) {
+                const jsonResp = JSON.parse(oldPdpData);
+                jsonResp.shift();
+                jsonResp.push(pdpData);
+                localStorage.setItem('recently_viewed', JSON.stringify(jsonResp));
+            }
+        }
+    }
+
+    setRecentlyViewedPdp();
+
+    // Function to get and display Recently Viewed Products
+    function getRecentPdp() {
+        const pdpData = JSON.parse(localStorage.getItem('recently_viewed'));
+        const recentViewHtml = [];
+
+        pdpData.forEach(function(item) {
+            recentViewHtml.push(`
+                <div class="swiper-slide">
+                    <section id="Recent">
+                        <div class="c-product">
+                            <div class="c-product__img">
+                                <a href="${item.productUrl}">
+                                    <img src="${item.productImg}" />
+                                </a>
+                            </div>
+                            <h3 class="c-product__title">
+                                <a class="c-product__url" href="${item.productUrl}">
+                                    ${item.productTitle}
+                                </a>
+                            </h3>
+                            <p class="c-productPrice">${item.productPrice}</p>
+                        </div>
+                    </section>
+                </div>
+            `);
+        });
+
+        const recentBlock = recentViewHtml.join('');
+        const contentBlock = document.querySelectorAll('.main-recently-views-p .swiper-wrapper');
+        contentBlock.forEach(element => {
+            element.innerHTML = recentBlock;
+        });
+    }
+
+    // Call function to inject Recently Viewed products into Swiper and initialize Swiper
+    $(document).ready(function() {
+        // Inject the recently viewed products
+        getRecentPdp();
+
+        // Initialize Swiper after content is injected
+        new Swiper('.swiperid-{{ section.id }}', {
+            loop: false,
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            slidesPerView: 4,
+            paginationClickable: true,
+            spaceBetween: 20,
+            pagination: '.swiper-pagination',
+            breakpoints: {
+                1920: {
+                    slidesPerView: 4,
+                    spaceBetween: 30
+                },
+                1028: {
+                    slidesPerView: 2,
+                    spaceBetween: 30
+                },
+                   767: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    },
+                    480: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    },
+                   225: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    },
+                   375: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    },
+                  320: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    }
+            }
+        });
+    });
+</script>
+
+
