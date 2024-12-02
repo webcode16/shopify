@@ -1,0 +1,45 @@
+ // paste this code main-product.css and create metafields
+ 
+ {%- when 'color' -%}             
+                  <div class="main_custom_product"> 
+                         <span>Color:</span>
+                    <div class="product_link_custom">
+                  {% comment %}  {% for list_item in product.metafields.custom.product_link.value %}   
+                         <a href="{{ list_item.url }}" style="background: {{ list_item.text }};"></a>
+                    {% endfor %} 
+                          {% assign displayed_colorrs = '' %} 
+                               {% for option in product.options_with_values %}
+                                       {% for value in option.values %}
+                                {% assign color_variant = product.variants | where: "option1", value %}
+                                {% for variant in color_variant %}
+                                     {% assign color = variant.options[0] %} 
+                                     {% unless displayed_colorrs contains color %}
+                                      <a href="{{ product.url }}?variant={{ variant.id }}">
+                                        <span class="value-option-s" data-var-image="{{ value }}" style="background: {{ value.swatch.color }}; border-radius: 50px; width: 28px; height: 28px; display: block;"></span>
+                                      </a>
+                                      {% assign displayed_colorrs = displayed_colorrs | append: color | append: ',' %} 
+                                        {% endunless %}
+                                {% endfor %}
+                              {% endfor %}
+                                {% endfor %} 
+                   {% endcomment %}   
+                      
+                        {% for product in product.metafields.custom.product.value %}
+                          {% assign displayed_colorrs = '' %} 
+                               {% for option in product.options_with_values %}
+                                       {% for value in option.values %}
+                                {% assign color_variant = product.variants | where: "option1", value %}
+                                {% for variant in color_variant %}
+                                     {% assign color = variant.options[0] %} 
+                                     {% unless displayed_colorrs contains color %}
+                                      <a href="{{ product.url }}?variant={{ variant.id }}">
+                                        <span class="value-option-s" data-var-image="{{ value }}" style="background: {{ value.swatch.color }}; border-radius: 50px; width: 28px; height: 28px; display: block;"></span>
+                                      </a>
+                                      {% assign displayed_colorrs = displayed_colorrs | append: color | append: ',' %} 
+                                        {% endunless %}
+                                {% endfor %}
+                              {% endfor %}
+                                {% endfor %} 
+                         {% endfor %}
+                    </div>
+                  </div>
