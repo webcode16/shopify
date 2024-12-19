@@ -8,7 +8,7 @@
             {% for variant in card_product.variants %}
               {% assign color = variant.options[0] %} 
               {% unless displayed_colors contains color %}
-                  <img src="{{ variant.featured_image | img_url: ' ' }}" alt="{{ color }}" />
+                  <img dat-url="{{ card_product.url }}?variant={{ variant.id }}" src="{{ variant.featured_image | img_url: ' ' }}" alt="{{ color }}" />
                 {% assign displayed_colors = displayed_colors | append: color | append: ',' %} 
               {% endunless %}
             {% endfor %}
@@ -17,7 +17,7 @@
             {% for option in card_product.options_with_values %}
               {% if option.name == 'Color' %} 
                 {% for value in option.values %}
-                 <a href="{{ card_product.url }}?variant={{ value.id }}"> <span class="value-option-s" data-var-image="{{ value }}" style="background: {{ value.swatch.color }}; width: 20px; height: 20px; display: block;"></span></a>
+                 <a href="{{ card_product.url }}?variant={{ value.id }}"> <span class="value-option-s" data-var-image="{{ value }}" dat-url="{{ card_product.url }}?variant={{ value.id }}" style="background: {{ value.swatch.color }}; width: 20px; height: 20px; display: block;"></span></a>
                 {% endfor %}
               {% endif %}
             {% endfor %}
