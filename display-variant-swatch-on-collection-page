@@ -8,7 +8,7 @@
             {% for variant in card_product.variants %}
               {% assign color = variant.options[0] %} 
               {% unless displayed_colors contains color %}
-                  <img dat-url="{{ card_product.url }}?variant={{ variant.id }}" src="{{ variant.featured_image | img_url: ' ' }}" alt="{{ color }}" />
+                  <img src="{{ variant.featured_image | img_url: ' ' }}" dat-url="{{ card_product.url }}?variant={{ variant.id }}" alt="{{ color }}" />
                 {% assign displayed_colors = displayed_colors | append: color | append: ',' %} 
               {% endunless %}
             {% endfor %}
