@@ -26,7 +26,9 @@
 $(document).ready(function(){
     $('.color-swatch-variant > span.value-option-s').on('click', function() {
         var index = $(this).index();
-        var imageHref = $('.color-swatch-images img').eq(index).attr('src');
+           if (imageHref && !imageHref.includes("no-image")) {          ----- use this if url is empty
+                   var imageHref = $('.color-swatch-images img').eq(index).attr('src');
+           }
         jQuery('.card__media .media a img:first-child').attr('srcset', imageHref);
     });
 });
