@@ -1,0 +1,72 @@
+<product-form class="product__form product-form product__block--border-none" data-hide-errors="false" data-section-id="template--18628150984920__product">
+  <form method="post" action="/cart/add" id="product-form-template--18628150984920__product" accept-charset="UTF-8" class="form" enctype="multipart/form-data" novalidate="novalidate" data-type="add-to-cart-form">
+    <input type="hidden" name="form_type" value="product">
+    <input type="hidden" name="utf8" value="✓">
+    
+    <!-- First Product -->
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    
+    <div class="product-form__buttons" data-enabled="true">
+      <button type="submit" name="add" id="AddToCart-template--18628150984920__product" class="product-form__submit button button--full-width btn-form-ad-t-c">
+        <span>Add to cart</span>
+        <span class="sub-price"></span>
+      </button>
+      <input type="hidden" name="product-id" value="{{ product.id }}">
+      <input type="hidden" name="section-id" value="template--18628150984920__product">
+    </div>  <!-- Close the product-form__buttons div -->
+  </form>
+
+  <div></div>
+
+  <!-- Add JavaScript for adding the second product and opening Boost cart drawer -->
+ <script>
+  document.getElementById('AddToCart-template--18628150984920__product').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent the form from submitting immediately
+
+    // Add the first product to the cart
+    var firstProductForm = document.querySelector('#product-form-template--18628150984920__product');
+    var formData = new FormData(firstProductForm);
+    fetch('/cart/add.js', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('First product added:', data);
+
+      // Add the second product to the cart (Second product's variant ID: 49942252912856)
+      var secondProductData = new FormData();
+      secondProductData.append('id', '49942252912856'); // Second product's variant ID
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: secondProductData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Second product added:', data);
+
+        // Open the Boost cart drawer (Make sure Boost provides this method)
+        if (window.Boost && typeof Boost.openCartDrawer === 'function') {
+          Boost.openCartDrawer(); // Opens the Boost cart drawer
+        } else {
+          console.warn('Boost cart drawer method not found.');
+        }
+
+      setTimeout(function() {
+ // Select the element with the class 'header-top__cart-button'
+var cartButton = document.querySelector('.header-top__cart-button');
+
+// Check if the element exists
+if (cartButton) {
+  cartButton.click(); // Trigger the click event on the button
+} else {
+  console.warn('Cart button not found.');
+}
+
+}, 500); // Wait for 500ms
+      });
+    });
+  });
+</script>
+
+</product-form>
