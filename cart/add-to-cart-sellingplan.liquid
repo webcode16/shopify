@@ -1,0 +1,42 @@
+$(document).ready(function() {
+  setTimeout(function() {
+    $('.add-to-cart').on('click', function(event) {
+        event.preventDefault();
+        $(this).addClass("adding");
+        var productIde = jQuery('[data-main-product-coco-tropic] product-form form input[name="id"]').val();
+        var planIde = jQuery('[data-main-product-coco-tropic] product-form form input[name="selling_plan"]').val(); 
+        var productDatae = {
+            'id': productIde,
+            'quantity': 1
+        };
+        if (planIde) {
+            productDatae['selling_plan'] = planIde;
+        }
+        addToCarte(productDatae);
+    });
+
+    function addToCarte(productDatae) {
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add.js',
+            data: {
+                'items': [productDatae]
+            },
+            dataType: 'json',
+            success: function(response) {
+                setTimeout(function() {
+                    var cartIcone = document.querySelector('.header-top__cart-button');
+                    if (cartIcone) {
+                        cartIcone.click(); 
+                    } else {
+                        console.warn('Cart icon not found.');
+                    }
+                }, 500);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error adding product to cart:', error);
+            }
+        });
+    }
+  }, 500);  
+});
