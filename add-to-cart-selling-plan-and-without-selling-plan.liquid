@@ -1,0 +1,103 @@
+// with selling plan
+<button class="add-to-cart button product-add button--full-width cocotropic-add-to-cart-btns" type="submit" style="width: 100%;">
+    <span>Add to cart</span>
+    <span class="sub-price"></span>
+    <input name="id" value="{{ product.variants[0].id }}" type="hidden">
+    <input type="hidden" name="selling_plan" value="{{ product.variants.first.selling_plan_allocations.first.selling_plan.id }}">
+</button>
+<script>  
+$(document).ready(function() {
+  setTimeout(function() {
+    $('.add-to-cart').on('click', function(event) {
+        event.preventDefault();
+        $(this).addClass("adding");
+        var iproductId = jQuery('[data-main-product-coco-tropic] product-form form input[name="id"]').val();
+       // console.log(iproductId);
+        var sellingPlanId = jQuery('[data-main-product-coco-tropic] product-form form input[name="selling_plan"]').val(); 
+        var itemsData = {
+            'id': iproductId,
+            'quantity': 1
+        };
+        if (sellingPlanId) {
+            itemsData['selling_plan'] = sellingPlanId;
+        }
+        iaddToCart(itemsData);
+    });
+
+    function iaddToCart(itemsData) {
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add.js',
+            data: {
+                'items': [itemsData]
+            },
+            dataType: 'json',
+            success: function(response) {
+                setTimeout(function() {
+                    var cartButton = document.querySelector('.header-top__cart-button');
+                    if (cartButton) {
+                        cartButton.click(); 
+                    } else {
+                        console.warn('Cart button not found.');
+                    }
+                }, 500);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error adding product to cart:', error);
+            }
+        });
+    }
+  }, 500);  
+});
+</script>
+
+
+// without selling plan
+<button class="add-to-cart-without-s button product-add button--full-width cocotropic-add-to-cart-btns" type="submit" style="width: 100%;">
+    <span>Add to cart</span>
+    <span class="sub-price"></span>
+    <input name="id" value="{{ product.variants[0].id }}" type="hidden">
+    <input type="hidden" name="selling_plan" value="{{ product.variants.first.selling_plan_allocations.first.selling_plan.id }}">
+</button>
+
+<script>
+$(document).ready(function() {
+  setTimeout(function() {
+    $('.add-to-cart-without-s').on('click', function(event) {
+        event.preventDefault(); 
+        $(this).addClass("adding");
+        var iproductId = jQuery('[data-main-product-coco-tropic] product-form form input[name="id"]').val();
+        //console.log(iproductId);
+        var itemsData = {
+            'id': iproductId,
+            'quantity': 1
+        };
+        iaddToCart(itemsData);
+    });
+
+    function iaddToCart(itemsData) {
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add.js',
+            data: {
+                'items': [itemsData]
+            },
+            dataType: 'json',
+            success: function(response) {
+                setTimeout(function() {
+                    var cartButton = document.querySelector('.header-top__cart-button');
+                    if (cartButton) {
+                        cartButton.click(); 
+                    } else {
+                        console.warn('Cart button not found.');
+                    }
+                }, 500);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error adding product to cart:', error);
+            }
+        });
+    }
+  }, 500);  
+});
+</script>
