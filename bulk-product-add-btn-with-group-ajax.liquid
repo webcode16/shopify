@@ -1,0 +1,60 @@
+$(document).ready(function () {
+    $("#add-to-cart-btn").on("click", function () {
+        var selectedVariants = [];
+
+        // Dynamically check the default variant when the "Add to Cart" button is clicked
+        var defaultCheckbox = $(".default-variant");
+        if (!defaultCheckbox.prop("checked")) {
+            defaultCheckbox.prop("checked", true); // Check the default variant
+        }
+
+        // First, add the default variant to the selectedVariants array
+        if (defaultCheckbox.prop("checked")) {
+            var defaultId = defaultCheckbox.val(); // Get the default product ID
+            var groupId = "group-" + $(".default-variant").data("product-id"); // Use the unique group_id based on the product ID
+            
+            // Push the default variant first
+            selectedVariants.push({
+                id: defaultId,
+                quantity: 1, // Adjust quantity if needed
+                properties: {
+                    group_id: groupId // Tag with the unique group_id
+                }
+            });
+        }
+
+        // Loop through all other checked variants (excluding the default one)
+        $(".variant-checkbox:checked").each(function () {
+            var variantId = $(this).val();
+            var groupId = "group-" + $(this).data("product-id"); // Generate unique group_id per product
+
+            // Ensure we don't add the default variant again
+            if (variantId !== "44725739880615") {
+                selectedVariants.push({
+                    id: variantId,
+                    quantity: 1, // Adjust quantity if needed
+                    properties: {
+                        group_id: groupId // Tag with the same group_id
+                    }
+                });
+            }
+        });
+
+        // Add selected variants (grouped by product) to the cart
+        $.ajax({
+            url: '/cart/add.js',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                items: selectedVariants
+            }),
+            success: function (data) {
+                window.location.href = '/cart'; // Redirect to cart page after success
+            },
+            error: function (error) {
+                console.error("Error adding to cart:", error);
+            }
+        });
+    });
+});
+
