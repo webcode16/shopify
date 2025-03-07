@@ -1,0 +1,48 @@
+//make this option
+1. settings.show_free_shippingbar
+2. settings.free_shipping_price
+3. settings.exchange_rate
+{% if cart != empty %}
+          {% if settings.show_free_shippingbar %}
+           <div class="free-shipping-bar">
+              {% assign current_currency = cart.currency.iso_code %}
+              {% assign free_shipping_target_usd = 1000.00 %} <!-- Free shipping target in USD -->
+              {% comment %}
+              {% if current_currency == "USD" %}
+                  {% assign free_shipping_target_usd = settings.value_for_usd | plus: 0 %}
+              {% elsif current_currency == "CAD" %}
+                  {% assign free_shipping_target_usd = settings.value_for_cad | plus: 0 %}
+              {% endif %}
+              {% endcomment %}
+              {% assign free_shipping_target_usd = settings.free_shipping_price | plus: 0 %}
+              {% assign conversion_rates = settings.exchange_rate | split: ',' %}
+              {% assign conversion_rate = 1 %} 
+             
+              {% for rate in conversion_rates %}
+                
+                {% assign currency_code = rate | split: ':' | first %}
+                {% assign rate_value = rate | split: ':' | last | plus: 0 %}
+                
+                {% if currency_code == current_currency %}
+                  {% assign conversion_rate = rate_value %}
+                {% endif %}
+              {% endfor %}
+              <!-- Convert the free shipping target and current cart total -->
+                {% assign free_shipping_target = free_shipping_target_usd | times: conversion_rate %}
+                {% assign current_total = cart.total_price | money_without_currency %}
+                {% assign remaining = free_shipping_target | minus: current_total %}
+                {% assign progress = current_total | divided_by: free_shipping_target | times: 100 %}
+                <!-- Display the free shipping message -->
+                {% if remaining > 0 %}
+                  <p>
+                     Spend <span class="amount">{{ remaining | times: 100  | money }}</span> more to reach free shipping!
+                  </p>
+                {% else %}
+                  <p class="congrts">You’ve reached <span>free shipping!</span></p>
+                {% endif %}
+                <div class="progress-bar">
+                  <div class="progress" style="width:{{ progress | round }}%;"></div>
+                </div>
+            </div>
+        {% endif %}
+      {% endif %}
