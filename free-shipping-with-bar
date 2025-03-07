@@ -73,3 +73,21 @@
             </div>
         {% endif %}
       {% endif %}
+
+// schema
+  {
+        "type": "checkbox",
+        "id": "show_free_shippingbar",
+        "label": "Show Free Shipping Bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_price",
+        "label": "Free Shipping Price"
+      },
+       {
+        "type": "number",
+        "id": "exchange_rate",
+        "label": "Exchange Rate"
+      }
