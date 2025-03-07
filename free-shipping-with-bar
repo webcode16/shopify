@@ -2,6 +2,33 @@
 1. settings.show_free_shippingbar
 2. settings.free_shipping_price
 3. settings.exchange_rate
+<style>
+.free-shipping-bar{
+  margin-bottom: 38px;
+}
+.free-shipping-bar .progress-bar {
+    background: #E3E3E3;
+    height: 4px;
+    display: block;
+}
+.free-shipping-bar .progress {
+    background: #775358;
+    height: 100%;
+    display: block;
+    max-width: 100%;
+}
+.free-shipping-bar> p {
+    font-family: Mosvita;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #775358;
+}
+.free-shipping-bar> p span{
+  font-weight: 800;
+}
+</style>
 {% if cart != empty %}
           {% if settings.show_free_shippingbar %}
            <div class="free-shipping-bar">
