@@ -1,0 +1,8 @@
+// Meaning - If want to display metaobjects, so first mind this is a value and this is a name of metaobject of type - "shopify.bat-material" as I say this is a value so I put a value after this.
+{{ product.metafields.shopify.bat-material.value | json }}
+{% for metafieldbrand in product.metafields.shopify.bat-material.value %}
+         {{ metafieldbrand.label }}
+{% endfor %}
+
+Example:
+value = [{"label":"English Willow","taxonomy_reference":"gid:\/\/shopify\/TaxonomyValue\/21193"}]
