@@ -1,0 +1,83 @@
+  <button disabled type="button" id="subscribe-now-btns" class="button button--full-width button--primary" style="margin-top: 10px;">
+                <span>Add <span class="subscribe-count">To</span> Cart</span>
+                   {% for variant in product.variants %}
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ variant.id }}"
+                      class="product-variant-id"
+                      quantity=""
+                      {% if product.selected_or_first_available_variant.available == false %}
+                        disabled
+                      {% endif %}
+                      sellingplanid="{{ product.variants.first.selling_plan_allocations.first.selling_plan.id }}"
+                    >
+                  {% endfor %}
+</button>  
+
+
+
+// ********* subscribe now button *************
+document.getElementById('subscribe-now-btns').addEventListener('click', function() {
+    const activeVariants = document.querySelectorAll('.product-variant-id.active');
+    const bundleProductName = "Bundle Product"; // Replace with dynamic name if necessary
+    const items = Array.from(activeVariants).map(variantElement => {
+        const variantId = variantElement.value; // Get the variant ID
+        const quantity = parseInt(variantElement.getAttribute('quantity') || '1'); // Get the quantity, default to 1
+        const sellingPlanId = variantElement.getAttribute('sellingplanid'); // Get the selling plan ID
+        const item = {
+            id: variantId,
+            quantity: quantity,
+            properties: {
+                bundle_name: bundleProductName // Product name for the bundle
+            }
+        };
+        if (sellingPlanId) {
+            item.selling_plan = parseInt(sellingPlanId);
+        }
+        return item;
+    });
+    fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ items: items })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.querySelectorAll('.add-to-cart').forEach(function(element) {
+              element.classList.remove('adding');
+          });
+          document.querySelectorAll('cart-drawer').forEach(function(element) {
+              element.classList.remove('is-empty');
+        });
+      fetch(location.href)
+          .then(response => response.text())
+          .then(data => {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = data;
+              const updatedCartDrawer = tempDiv.querySelector('#CartDrawer');
+              if (updatedCartDrawer) {
+                  document.querySelector('.cart-drawer').innerHTML = updatedCartDrawer.innerHTML;
+              }
+          });
+      document.querySelector('a#cart-icon-bubble').click();
+      document.querySelector('.header__icon--cart').click();
+      fetch(location.href)
+          .then(response => response.text())
+          .then(data => {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = data;
+              const updatedCartIcon = tempDiv.querySelector('.header__icon--cart');
+              if (updatedCartIcon) {
+                  document.querySelector('.header__icon--cart').innerHTML = updatedCartIcon.innerHTML;
+              }
+          });
+    })
+    .catch(error => {
+        // Handle any errors during the process
+        console.error('Error adding products to cart:', error);
+        alert('There was an error adding the products to your cart. Please try again.');
+    });
+});
