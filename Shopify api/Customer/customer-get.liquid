@@ -1,0 +1,36 @@
+<script>
+const shopifyUrl = 'https://beckon-court.myshopify.com/admin/api/2023-01/customers.json';
+const accessToken = 'Admin API access token';
+
+let pageInfo = '';  // Initialize page info for pagination if available
+
+function fetchCustomers() {
+  let url = shopifyUrl;
+  if (pageInfo) {
+    url = `${shopifyUrl}?page_info=${pageInfo}`;
+  }
+
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-Shopify-Access-Token': accessToken,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.customers);  // Logs the customers data from Shopify
+
+      // If there is more data (pagination), set the next page's page_info
+      if (data.page_info) {
+        pageInfo = data.page_info;
+        fetchCustomers();  // Fetch the next page
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching customer data:', error);
+    });
+}
+
+fetchCustomers();
+</script>
