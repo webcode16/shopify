@@ -1,0 +1,283 @@
+<style>
+{% if customer %}
+.quantity-input::-webkit-inner-spin-button, .quantity-input::-webkit-outer-spin-button {
+    margin: -6px;
+}
+{% endif %}
+</style>
+      {% assign loop_limit = 1 %}
+      {% assign sloop_limit = 1 %}
+      {% assign tloop_limit = 1 %}
+      {% assign gridbuttondatacount = 1 %}
+      {% assign secondbuttondatacount = 1 %}
+      {% assign thirdbuttondatacount = 1 %}
+       {% if settings.bundle-option == 'two-four-six' %}
+         {% assign loop_limit = 2 %}
+          {% assign sloop_limit = 2 %}
+          {% assign tloop_limit = 4 %}
+          {% assign gridbuttondatacount = 2 %}
+          {% assign secondbuttondatacount = 4 %}
+          {% assign thirdbuttondatacount = 6 %}
+        {% elsif settings.bundle-option == 'four-six-eight' %}
+          {% assign loop_limit = 4 %}
+          {% assign sloop_limit = 4 %}
+          {% assign tloop_limit = 6 %}
+          {% assign gridbuttondatacount = 4 %}
+          {% assign secondbuttondatacount = 6 %}
+          {% assign thirdbuttondatacount = 8 %}
+      {% endif %}
+<div class="under-build-a-bundle">
+  <div class="main_build_a_bundle">
+    <h2 class="heading">{{ heading }}</h2>
+    <div class="main-bundle-both">
+      <div class="main-bundle-product-grid">
+        <div class="under-offer-heading bundle-boxer">
+          <p class="font-bold">{{ title }}</p>
+          <p>{{ subtitle }}</p>
+        </div>
+        <div class="main_bundle_product_tab">
+            <div class="title">
+              <ul>
+               {% for product in product.metafields.custom.bundle_products.value %}
+                  <li {% if forloop.first %}id="foroffirst-d"{% endif %} class="{% if forloop.index == 1 %}active{% endif %}" data-title-name="{{ product.title | downcase | replace: ' ', '-'}}">{{ product.title }}</li>
+               {% endfor %}
+             </ul>   
+            </div>
+            <div class="content">
+              <div class="main_product_grid">
+                <div class="product-grid active">
+                    {% for variant in product.variants %}
+                          <div class="under-product-grid" data-content-name="{{ variant.metafields.custom.type.value }}" 
+                              data-image="{{ variant.featured_image | img_url: '' }}" 
+                              data-title="{{ variant.title }}"
+                              data-description="{{ product.description }}">
+                              <p class="display-product-data">
+                                  <svg width="32" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="2" y="2" width="38" height="38" rx="19" fill="#ffae00" stroke="black" stroke-width="4"></rect>
+                                      <path d="M19.1235 15.125V11.5L22.6235 11.25V14.975L19.1235 15.125ZM19.0985 31.15V17.225L22.5985 16.925V30.85L19.0985 31.15Z" fill="#241F21"></path>
+                                  </svg>
+                              </p>
+                              <img class="product_image" src="{{ variant.featured_image | img_url: '' }}" alt="product_image">
+                              <p class="product_title">{{ variant.title | split: ' - ' | first }}</p>
+                      
+                              <div class="quantity-container">
+                                  <button class="minus">-</button>
+                                  <input class="quantity-input" type="number" value="0" min="0" readonly>
+                                  <button class="plus">+</button>
+                              </div>
+                      
+                              <button class="product-grid-add" data-id="{{ variant.id }}" data-price="{{ variant.price | money }}" data-count="{{ gridbuttondatacount }}">Add</button>
+                          </div>
+                      {% endfor %}
+
+
+                </div>                
+              </div>  
+            </div>
+        </div>
+       </div>
+       <div class="main-bundle-packs">
+         <div class="under-main-bundle-packs">
+          <div class="build--heading-count-flex">
+            <p class="heading">Your Bundle</p>
+            <div class="build-count-flex">
+              <p class="build-count-out-of">0</p>
+              <p class="build-count-out-of-total">/4</p>
+            </div>
+          </div>
+          <ul class="under-all-bundles">
+              <li>
+                <span class="count">1</span><span>Select Bundle Size</span>
+                <ul class="under-inner-all-bundles packs">
+                  <li class="four-packs active" data-pack="{{ gridbuttondatacount }}" data-perc="{{ settings.first-discount }}" aria-disabled="false">
+                    <p class="boxes">{{ gridbuttondatacount }} {{ boxesone }}</p>
+                    <p class="servings">({{ servingone }})</p>
+                    <p class="percentage">{{ settings.first-discount }}% off</p>
+                  </li>
+                  <li class="six-packs" data-pack="{{ secondbuttondatacount }}" data-perc="{{ settings.second-discount }}" aria-disabled="false">
+                     <p class="boxes">{{ secondbuttondatacount }} {{ boxestwo }}</p>
+                     <p class="servings">({{ servingtwo }})</p>
+                     <p class="percentage">{{ settings.second-discount }}% off</p>
+                  </li>
+                  <li class="eight-packs" data-pack="{{ thirdbuttondatacount }}" data-perc="{{ settings.third-discount }}" aria-disabled="false">
+                     <p class="boxes">{{ thirdbuttondatacount }} {{ boxesthree }}</p>
+                     <p class="servings">({{ servingthree }})</p>
+                     <p class="percentage">{{ settings.third-discount }}% off</p>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <span class="count">2</span><span>Choose Products</span>
+                 <div class="main_bundle_product_tab">
+            <div class="title">
+              <ul>
+               {% for product in product.metafields.custom.bundle_products.value %}
+                  <li {% if forloop.first %}id="foroffirst"{% endif %} class="{% if forloop.index == 1 %}active{% endif %}" data-title-name="{{ product.title | downcase | replace: ' ', '-'}}">{{ product.title }}</li>
+               {% endfor %}
+             </ul>   
+            </div>
+            <div class="content">
+              <div class="main_product_grid">
+                <div class="product-grid active">
+          {% for variant in product.variants %}
+    <div class="under-product-grid" data-content-name="{{ variant.metafields.custom.type.value }}" 
+        data-image="{{ variant.featured_image | img_url: '' }}" 
+        data-title="{{ variant.title }}"
+        data-description="{{ product.description }}">
+
+        <p class="display-product-data">
+            <svg width="32" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="38" height="38" rx="19" fill="#ffae00" stroke="black" stroke-width="4"></rect>
+                <path d="M19.1235 15.125V11.5L22.6235 11.25V14.975L19.1235 15.125ZM19.0985 31.15V17.225L22.5985 16.925V30.85L19.0985 31.15Z" fill="#241F21"></path>
+            </svg>
+        </p>
+        <img class="product_image" src="{{ variant.featured_image | img_url: '' }}" alt="product_image">
+        <p class="product_title">{{ variant.title | split: ' - ' | first }}</p>
+
+        <div class="quantity-container">
+            <button class="minus">-</button>
+            <input class="quantity-input" type="number" value="0" min="0" readonly>
+            <button class="plus">+</button>
+        </div>
+
+        <button class="product-grid-add" data-id="{{ variant.id }}" data-price="{{ variant.price | money }}" data-count="{{ gridbuttondatacount }}">Add</button>
+    </div>
+{% endfor %}
+
+
+                </div>                
+              </div>  
+            </div>
+        </div>
+            
+              
+                <ul class="under-inner-all-bundles plus">
+                  <li>
+                    <div class="image-icon-list four-plus active">
+                      {% for i in (1..loop_limit) %}
+                        <div class="pack-plus-img" data-index="{{ forloop.index }}">
+                          <svg class="bundle-icon build-a-bundle__pack-image-default" data-id="empty" width="36" height="29" viewBox="0 0 36 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="4.5" y="1.30005" width="27" height="27" rx="13.5" stroke="#ffae00" stroke-dasharray="1.5 1.5"></rect>
+                            <path d="M18.0005 8.80005V20.8" stroke="#241F21" stroke-width="1.5"></path>
+                            <path d="M24 14.8005L12 14.8005" stroke="#241F21" stroke-width="1.5"></path>
+                          </svg>
+                          {% for variant in product.variants %}
+                            <img data-id="{{ variant.id }}" class="product_image" src="{{ variant.featured_image | img_url: '' }}" alt="product_image" width="32px" height="34px">
+                          {% endfor %} 
+                        </div>  
+                      {% endfor %}
+                    </div>
+                     <div class="image-icon-list six-plus">
+                      {% for i in (5..6) %}
+                         <div class="pack-plus-img" data-index="{{ forloop.index | plus: sloop_limit }}">
+                            <svg class="bundle-icon build-a-bundle__pack-image-default" data-id="empty" width="36" height="29" viewBox="0 0 36 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect x="4.5" y="1.30005" width="27" height="27" rx="13.5" stroke="#ffae00" stroke-dasharray="1.5 1.5"></rect>
+                              <path d="M18.0005 8.80005V20.8" stroke="#241F21" stroke-width="1.5"></path>
+                              <path d="M24 14.8005L12 14.8005" stroke="#241F21" stroke-width="1.5"></path>
+                            </svg>
+                            {% for variant in product.variants %}
+                              <img data-id="{{ variant.id }}" class="product_image" src="{{ variant.featured_image | img_url: '' }}" alt="product_image" width="32px" height="34px">
+                            {% endfor %}
+                         </div> 
+                      {% endfor %}
+                    </div>
+                    <div class="image-icon-list eight-plus">
+                        {% for i in (5..6) %}
+                         <div class="pack-plus-img" data-index="{{ forloop.index | plus: tloop_limit }}">
+                          <svg class="bundle-icon build-a-bundle__pack-image-default" data-id="empty" width="36" height="29" viewBox="0 0 36 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="4.5" y="1.30005" width="27" height="27" rx="13.5" stroke="#ffae00" stroke-dasharray="1.5 1.5"></rect>
+                            <path d="M18.0005 8.80005V20.8" stroke="#241F21" stroke-width="1.5"></path>
+                            <path d="M24 14.8005L12 14.8005" stroke="#241F21" stroke-width="1.5"></path>
+                          </svg>
+                          {% for variant in product.variants %}
+                            <img data-id="{{ variant.id }}" class="product_image" src="{{ variant.featured_image | img_url: '' }}" alt="product_image" width="32px" height="34px">
+                          {% endfor %}
+                         </div> 
+                        {% endfor %}
+                    </div>
+                  </li>
+                </ul>
+               
+              </li>
+              <li class="main-subscribe-and-save">
+                <span class="count">3</span><span>Select Frequency</span>
+                <ul class="under-inner-all-bundles sub-non-sub">
+                    <li>
+                      <input id="one-time" type="radio" name="subscription_app" value="1">
+                      <svg class="build-a-bundle__type-button-icon text-transparent pointer-events-none" width="14" height="16" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="build-a-bundle__type-button-icon-outer text-complete" cx="9.5" cy="10.123" r="9" stroke="currentColor"></circle>
+                        <circle class="build-a-bundle__type-button-icon-inner text-complete" cx="9.5" cy="10.123" r="5.5" fill="currentColor"></circle>
+                      </svg>
+                      <label for="one-time">{{ onetimebtn }}</label>
+                    </li>
+                    <li>
+                      <input id="subscribe-and-save" type="radio" name="subscription_app">
+                       <svg class="build-a-bundle__type-button-icon text-transparent pointer-events-none" width="14" height="16" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="build-a-bundle__type-button-icon-outer text-complete" cx="9.5" cy="10.123" r="9" stroke="currentColor"></circle>
+                        <circle class="build-a-bundle__type-button-icon-inner text-complete" cx="9.5" cy="10.123" r="5.5" fill="currentColor"></circle>
+                      </svg>
+                      <label for="subscribe-and-save">{{ subsavebtn }}</label>
+                    </li>
+                </ul>
+                <ul class="under-inner-all-bundles weeks-count subscribe-and-save">
+                    {% for selling_plan_group in product.selling_plan_groups %}
+                      {% for selling_plan in selling_plan_group.selling_plans %}
+                        {% for option in selling_plan.options %}
+                          {% for price_adjustment in selling_plan.price_adjustments %}
+                            <li class="{% if forloop.first %}active{% endif %}" data-perc="{{ price_adjustment.value }}">{{ option.value }}</li>
+                          {% endfor %}
+                        {% endfor %}
+                      {% endfor %}
+                    {% endfor %}
+                </ul>
+                <p class="subscribe-and-save message-sbundle">{{ subscribeandsavecontent }}</p>
+                <p class="one-time message-sbundle">{{ onetimecontent }}</p>
+                <div class="btn-benefits">
+                  <p>BENEFITS OF SUBSCRIPTION
+                  <svg class="pointer-events-none transform build-a-bundle__benefits-trigger-icon" width="11" height="10" viewBox="0 0 15 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14 1L7.5 8L1 0.999999" stroke="#241F21" stroke-width="1.5"></path>
+                    </svg>
+                  </p>
+                  <div class="benefits-messages">
+                    {{ benefits-messages }}
+                  </div>
+                </div>
+                <p class="bundle_total"><span>Total</span>
+                  <span>
+                    <span class="bundle_total_price">{{ '0' | money }}</span>
+                    <span class="bundle_discounted_price"></span>
+                  </span>
+                </p>
+              </li>
+              <p class="selling-plan-all" style="display: none;">
+                {% for variant in product.variants limit: 1 %}
+                 {% for allocation in variant.selling_plan_allocations limit: 3 %}
+                         <span data-selling-plan-ids="{{ allocation.selling_plan.id }}"></span>
+                  {% endfor %}
+                {% endfor %}
+              </p>
+              <button disabled type="button" id="subscribe-now-btns" class="button button--full-width button--primary">
+                <span>Add <span class="subscribe-count">To</span> Cart</span>
+                   {% for variant in product.variants %}
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ variant.id }}"
+                      class="product-variant-id"
+                      quantity=""
+                      {% if product.selected_or_first_available_variant.available == false %}
+                        disabled
+                      {% endif %}
+                      sellingplanid="{{ product.variants.first.selling_plan_allocations.first.selling_plan.id }}"
+                    >
+                  {% endfor %}
+                
+              </button>          
+          </ul> 
+         </div>  
+       </div>
+    </div>
+  </div>
+</div>  
+
+
