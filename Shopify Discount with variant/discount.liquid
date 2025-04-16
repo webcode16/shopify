@@ -1,0 +1,18 @@
+{% for variant in product.variants %}
+   <h3 class="you-save-txt {% if forloop.index == 1 %}active{% endif %}" style="font-weight: bold; color: #3981A2;">
+   {% if variant.compare_at_price > variant.price %}
+        You save {{ variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | money_without_currency | times: 100 | remove: '.0' }}% ({{ variant.compare_at_price | minus: variant.price | money_with_currency }})
+    {% endif %}
+    </h3> 
+{% endfor %}
+<script>
+setTimeout(function(){
+  jQuery('.ProductForm__Variants .ProductForm__Option ul.SizeSwatchList > li').each(function(index){
+    jQuery(this).on('click', function() {
+        jQuery('.led-product-price .you-save-txt').removeClass('active');
+        jQuery('.led-product-price .you-save-txt').eq(index).addClass('active');
+        jQuery(this).addClass('active').siblings().removeClass('active');
+    });
+  }); 
+}, 1000);  
+</script>
