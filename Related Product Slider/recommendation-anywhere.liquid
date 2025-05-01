@@ -1,0 +1,153 @@
+<!-- Include your required styles and scripts -->
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+<style>
+
+  
+</style>
+<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+<div class="color-{{ section.settings.color_scheme }} gradient no-js-hidden main_related_products">
+  <div class="cart-r-p related-products page-width section-{{ section.id }}-padding isolate">
+    <h2 class="heading">People Also Buy</h2>
+    <p class="first-tab-heading tab-heading is-active" data-match="recommended">Recommended</p>
+    <p class="tab-heading" data-match="dealofthe-day">Deal of the Day</p>
+    <ul
+      id="cart-recommendations"
+      class="custom-slider grid1 product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down is-active"
+      role="list"
+      data-match="recommended">
+      <!-- Recommendations will be injected here -->
+    </ul>
+    <ul
+      id="cart-dealoftheday"
+      class="custom-slider grid1 product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
+      role="list"
+      data-match="dealofthe-day">
+         {% for product in collection.products %}
+           {% if product.available %}
+           <li class="grid__item1 custom-slide">
+              <a href="{{ product.url }}" class="product-card-link">
+                  <div class="product-card-image">
+                    <img src="{{ product.images[1] | img_url: ' ' }}" alt="{{ product.url }}">
+                  </div>
+                  <div class="product-card-details">
+                    <h3 class="product-card-title">{{ product.title }}</h3>
+                    <div class="product-card-price">{{ product.price | money_with_currency }}</div>
+                    <form method="post" action="/cart/add">
+                      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                      <button type="submit" class="btn">Add</button>
+                    </form>
+                  </div>
+                </a>
+           </li>  
+            {% endif %} 
+         {% endfor %}  
+    </ul>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  // Get the text from the footer country selector
+  let text = jQuery('form#FooterCountryForm button.disclosure__button > span').text().trim();
+  let lines = text.split('\n').map(line => line.trim()).filter(line => line); // remove empty lines
+
+  // Initialize currencySymbol variable
+  let currencySymbol = '';
+  if (lines.length > 1) {
+    let rawSymbol = lines[1].trim();
+
+    // If it's only ₹, replace with Rs
+    if (rawSymbol === '₹') {
+      currencySymbol = 'Rs. ';
+    } else {
+      // Otherwise extract the symbol
+      let match = rawSymbol.match(/[^A-Za-z\s]+/);
+      currencySymbol = match ? match[0] : rawSymbol;
+    }
+  }
+
+  console.log(currencySymbol); // Optional: log for debugging
+
+  // Fetch current cart contents
+  fetch('/cart.js')
+    .then(res => res.json())
+    .then(cart => {
+      if (!cart.items.length) return; // Exit if cart is empty
+
+      const productId = cart.items[0].product_id;
+
+      // Get product recommendations
+      fetch(`/recommendations/products.json?product_id=${productId}&limit=8`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.products.length) return; // Exit if no recommendations
+
+          const container = document.getElementById('cart-recommendations');
+
+          // Build and insert recommended product cards
+          data.products.forEach(product => {
+            const li = document.createElement('li');
+            li.className = 'grid__item1 custom-slide';
+
+            const variantId = product.variants[0].id;
+            const price = (product.price / 100).toFixed(2);
+            const image = product.images[0]
+              ? product.images[0]
+              : '//cdn.shopify.com/s/files/1/0000/0001/files/placeholder.png';
+
+            li.innerHTML = `
+              <a href="${product.url}" class="product-card-link">
+                <div class="product-card-image">
+                  <img src="${image}" alt="${product.title}">
+                </div>
+                <div class="product-card-details">
+                  <h3 class="product-card-title">${product.title}</h3>
+                  <div class="product-card-price">${currencySymbol}${price}</div>
+                  <form method="post" action="/cart/add">
+                    <input type="hidden" name="id" value="${variantId}">
+                    <button type="submit" class="btn">Add</button>
+                  </form>
+                </div>
+              </a>
+            `;
+
+            container.appendChild(li);
+          });
+
+          // Initialize Flickity carousel after DOM is updated
+          setTimeout(() => {
+            new Flickity(container, {
+              cellAlign: 'left',
+              contain: true,
+              pageDots: false,
+              wrapAround: true,
+            });
+
+            // Optional: deal of the day carousel (another Flickity)
+            new Flickity('ul#cart-dealoftheday', {
+              cellAlign: 'left',
+              contain: true,
+              pageDots: false,
+              wrapAround: true,
+              groupCells: 1,
+              draggable: true,
+            });
+
+            // Tab switching logic for related products section
+            jQuery('.cart-r-p.related-products .tab-heading').click(function () {
+              var dataMatch = jQuery(this).attr('data-match');
+              jQuery('.tab-heading').removeClass('is-active');
+              jQuery(this).addClass('is-active');
+              jQuery('.cart-r-p.related-products ul').removeClass('is-active');
+              jQuery(`.cart-r-p.related-products ul[data-match="${dataMatch}"]`).addClass('is-active');
+            });
+          }, 500); // Slight delay to ensure DOM is updated
+        });
+    });
+});
+
+</script>
