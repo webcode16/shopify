@@ -1,0 +1,11 @@
+{% assign tests = product.metafields.custom.test.value %}
+              {% if tests %}
+                {% for test in tests %}
+                  {% for img in test.icon.value %}
+                  {% if test.icon.value and test.title.value %}
+                  {% assign i = forloop.index | minus: 1 %}
+                        <a><img src="{{ img | img_url: ' ' }}">{{ test.title.value[i] }}</a>
+                  {% endif %}
+                  {% endfor %}  
+                {% endfor %}
+              {% endif %}
