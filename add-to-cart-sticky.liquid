@@ -1,0 +1,65 @@
+<style>
+.product-sticky-bar {
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 8px 10px #0000001f;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    width: 100%;
+    background: #fff;
+    padding: 8px 16px;
+}
+.under-product-sticky-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.under-product-sticky-bar-left {
+    display: flex;
+    align-items: center;
+}
+#add-to-bag-sticky {
+    background: #ffdd30;
+    border: 1px solid #ffdd30;
+    width: 100%;
+    margin-top: 10px;
+    color: #000;
+    padding: 4px 84px;
+    text-transform: uppercase;
+}
+</style>
+<div class="product-sticky-bar">
+  <div class="under-product-sticky-bar">
+    <div class="under-product-sticky-bar-left">
+      <img src="{{ product.featured_image | img_url: ' ' }}">
+      <p>{{ product.title }}</p>
+    </div>  
+    <div class="under-product-sticky-bar-right">
+      <button id="add-to-bag-sticky">{% if product.available %}Add to Bag{% else %}Sold Out{% endif %} - {{ product.price | money_with_currency }}</button>
+    </div>
+  </div>
+</div>
+<script>
+window.onscroll = function() {
+  myFunction();
+};
+function myFunction() {
+  var header = document.querySelector(".product-form .product-form__buttons");
+  var stickyBar = document.querySelector(".product-sticky-bar");
+  if (header) {
+    var rect = header.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) {
+      header.classList.add("sticky");
+      stickyBar.style.display = "block";
+    } else {
+      header.classList.remove("sticky");
+      stickyBar.style.display = "none";
+    }
+  }
+}
+document.getElementById('add-to-bag-sticky').addEventListener('click', function() {
+  const submitButton = document.querySelector('.product-form__submit');
+  if (submitButton) {
+    submitButton.click();
+  }
+});
+</script>
