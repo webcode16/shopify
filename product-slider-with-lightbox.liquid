@@ -1,0 +1,267 @@
+Apply this snippet 
+or
+replace ---- product-media-gallery.liquid
+<link href="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/css/splide.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
+<script src="https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js" type="module"></script>
+<style>
+    /* prooduct image slider */
+/* General Splide Styling */
+.splide {
+  width: 80%;
+  margin: 0 auto;
+}
+.pswp.pswp--open {
+    background: #000000ba;
+}
+.pswp img {
+    max-width: none;
+    object-fit: contain;
+}
+.splide__slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  background: transparent;
+  height: 200px; /* Default slide height */
+  border-radius: 8px;
+}
+/* .pswp--click-to-zoom.pswp--zoom-allowed .pswp__img{
+  object-fit: contain;
+} */
+#main-slider .splide__slide a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.product-section-main-wrap .product-single__page-wrap {
+  display: flex;
+}
+#main-slider {
+  height: 100%;
+  margin-bottom: 20px; /* Space between main slider and thumbnails */
+}
+
+#main-slider .splide__slide {
+  height: 100%; /* Larger height for main slider */
+  font-size: 28px; /* Larger font for main slider */
+}
+
+#main-slider .splide__track {
+  height: 100%;
+}
+
+#thumbnail-slider {
+  height: auto;
+}
+#thumbnail-slider img,
+  .splide__list img{
+  width: 100%;
+}
+#thumbnail-slider .splide__slide {
+  height: 100%; /* Smaller thumbnails */
+  font-size: 16px;
+  background-color: #6c757d;
+}
+
+#thumbnail-slider .splide__slide.is-active {
+  border: 2px solid #007bff; /* Highlight active thumbnail */
+  background-color: #fff;
+  color: #007bff;
+}
+.product__info-wrapper {
+  position: static !important;
+  padding-top: 0 !important;
+}
+/* .main_img {
+  width: 900px;
+  max-width: calc(100% - 30px);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex-direction: row-reverse;
+  position: sticky;
+  top: 32px;
+  height: 100%;
+} */
+
+#thumbnail-slider .splide__slide {
+  opacity: 0.8;
+  border: 0;
+}
+#thumbnail-slider .splide__slide.is-active {
+  opacity: 1;
+  border: 0 !important;
+}
+ul.splide__pagination.splide__pagination--ttb {
+  display: none;
+}
+.main_img .left_col {
+  width: 75%;
+  float: right;
+}
+.product-page__content .main_img > div {
+  max-height: 505px;
+}
+.main_img .right_col {
+  width: 15%;
+  margin-left: auto;
+  float: left;
+}
+div#thumbnail-slider-track {
+    max-height: 460px;
+}
+/* Main slider styling */
+#main-slider {
+  width: 100%; /* Adjust width as needed */
+  float: left; /* Align to the left of thumbnails */
+}
+
+/* Vertical thumbnail slider styling */
+#thumbnail-slider {
+  width: 100%; /* Adjust width as needed */
+  height: 100%; /* Full height for vertical layout */
+  float: right; /* Align to the right of the main slider */
+  overflow: hidden; /* Prevent overflowing slides */
+}
+
+#thumbnail-slider .splide__list {
+  display: flex;
+  flex-direction: column; /* Make the slides stack vertically */
+}
+.product-section-main-wrap .product__info-wrapper {
+  position: static;
+}
+#thumbnail-slider .splide__slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #6c757d;
+  height: 100px; /* Adjust thumbnail height */
+  border-radius: 4px;
+  margin-bottom: 10px; /* Space between thumbnails */
+}
+
+#thumbnail-slider .splide__slide.is-active {
+  border: 2px solid #007bff; /* Highlight the active thumbnail */
+  background-color: #fff;
+  color: #007bff;
+}
+</style>
+<div class="main_img">
+  <div class="left_col">
+    <div class="splide" aria-labelledby="carousel-heading" id="main-slider">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {%- for media in product.media -%}
+                    <li
+                      class="splide__slide product-single__gallery-item"
+                      data-alt="{{ media.alt }}"
+                      data-media-id="{{ section.id }}-{{ media.id }}"
+                    >
+                        <a href="{{ media.preview_image | image_url: width: 1200 }}"
+           data-pswp-width="1200"
+           data-pswp-height="800"
+           target="_blank"
+           class="pswp-gallery">
+                      {%- liquid
+                        assign media_position = media_position | plus: 1
+                        assign lazy_load = true
+                        if featured_media != null and media.id == featured_media.id
+                          assign lazy_load = false
+                        elsif media_position == 1
+                          assign lazy_load = false
+                        endif
+                      -%}
+                        <img src="{{ media.src | img_url: ' ' }}" alt="{{ media.alt }}">
+                    </a>
+ 
+                  </li>
+                  {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="right_col">
+    <div class="splide" aria-labelledby="carousel-heading" id="thumbnail-slider">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {%- for media in product.media -%}
+                    <li
+                      class="splide__slide product-single__gallery-item"
+                      data-alt="{{ media.alt }}"
+                      data-media-id="{{ section.id }}-{{ media.id }}"
+                    >
+                      {%- liquid
+                        assign media_position = media_position | plus: 1
+                        assign lazy_load = true
+                        if featured_media != null and media.id == featured_media.id
+                          assign lazy_load = false
+                        elsif media_position == 1
+                          assign lazy_load = false
+                        endif
+                      -%}
+                        <img src="{{ media.src | img_url: ' ' }}" alt="{{ media.alt }}">
+                    </li>
+                  {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/js/splide.min.js"></script>
+<script>
+ var thumbnails = new Splide("#thumbnail-slider", {
+  direction: "ttb",
+  height: "100%",
+  perPage: 4,
+  isNavigation: true,
+  wheel: true,
+  breakpoints: {
+    640: {
+      direction: "ltr",
+      fixedWidth: 66,
+      fixedHeight: 38
+    }
+  }
+});
+
+var main = new Splide("#main-slider", {
+  type: "slide",
+  direction: "ttb",
+  height: 500,
+  wheel: true,
+  pagination: false,
+  arrows: false,
+    breakpoints: {
+    640: {
+      direction: "ltr",
+    }
+  }
+});
+
+thumbnails.mount();
+main.sync(thumbnails).mount();
+
+
+</script>
+<script type="module">
+  import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: '#main-slider',       // Your Splide container
+    children: 'a',                 // Target anchor tags
+    pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.min.js'),
+  });
+
+  lightbox.init();
+</script>
