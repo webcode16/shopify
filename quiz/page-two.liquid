@@ -1,0 +1,75 @@
+  <div class="survey">
+    <!-- Toggle Buttons -->
+    <div class="form-toggle-buttons">
+       {% comment %}<button class="toggle-btn" onclick="showForm('abc', this)">Start Quiz </button>{% endcomment %}
+     <!-- <button class="toggle-btn" onclick="showForm('xyz', this)">Start Quiz</button>  -->
+      <h1>Quiz</h1>
+    </div>
+
+    <!-- XYZ Form -->
+  <div class="xyz" id="form-xyz" style="display: block;">
+   <form id="surveyForm-two">
+  <fieldset id="xyz_step1" class="active"><legend>1. I respond to stress by:</legend>
+    <label><input type="radio" name="q1" value="red"><span>Reacting quickly or snapping—I need to act or fix things right away</span></label>
+    <label><input type="radio" name="q1" value="yellow"><span>Overthinking, trying to stay productive, or doing more to feel in control</span></label>
+    <label><input type="radio" name="q1" value="blue"><span>Withdrawing, zoning out, or feeling frozen and unsure what to do</span></label>
+    <label><input type="radio" name="q1" value="green"><span>Taking a moment to breathe, move, or ground myself before responding</span></label>
+  </fieldset>
+  <fieldset id="xyz_step2"><legend>2. I usually feel:</legend>
+    <label><input type="radio" name="q2" value="red"><span>On edge, irritated, or like everything is too much</span></label>
+    <label><input type="radio" name="q2" value="yellow"><span>Constantly busy, overstimulated, or wired but tired</span></label>
+    <label><input type="radio" name="q2" value="blue"><span>Numb, checked out, or emotionally flat</span></label>
+    <label><input type="radio" name="q2" value="green"><span>Present, grounded, and generally balanced—even when life is stressful</span></label>
+  </fieldset>
+  <fieldset id="xyz_step3"><legend>3. My body often feels:</legend>
+    <label><input type="radio" name="q3" value="red"><span>Tight, tense, or fired up—like I’m holding a lot inside</span></label>
+    <label><input type="radio" name="q3" value="yellow"><span>Buzzing with nervous energy, hard to sit still</span></label>
+    <label><input type="radio" name="q3" value="blue"><span>Heavy, slow, or like I want to disappear into the couch</span></label>
+    <label><input type="radio" name="q3" value="green"><span>Relaxed, alert, and in tune with my breath and sensations</span></label>
+  </fieldset>
+    <fieldset id="xyz_step4"><legend>4. I struggle most with:</legend>
+    <label><input type="radio" name="q4" value="red"><span>Reactivity, anger, or emotional outbursts</span></label>
+    <label><input type="radio" name="q4" value="yellow"><span>Burnout, saying yes when I want to say no, or pushing through exhaustion</span></label>
+    <label><input type="radio" name="q4" value="blue"><span>Feeling disconnected, low motivation, or not fully "here"</span></label>
+    <label><input type="radio" name="q4" value="green"><span>Nothing major—I feel resilient and able to handle life as it comes</span></label>
+  </fieldset>
+     <fieldset id="xyz_step5"><legend>5. When someone upsets me, I…</legend>
+    <label><input type="radio" name="q5" value="red"><span>Get defensive or feel like I need to fix or win the situation</span></label>
+    <label><input type="radio" name="q5" value="yellow"><span>Overanalyze it or replay it in my head for days</span></label>
+    <label><input type="radio" name="q5" value="blue"><span>Go silent, avoid the situation, or shut down</span></label>
+    <label><input type="radio" name="q5" value="green"><span>Acknowledge my feelings, respond calmly, and move on</span></label>
+  </fieldset>
+     <fieldset id="xyz_step6"><legend>6. When someone upsets me, I…</legend>
+    <label><input type="radio" name="q6" value="red"><span>Tossing and turning, waking up with tension</span></label>
+    <label><input type="radio" name="q6" value="yellow"><span>Light or restless sleep—I wake easily and don’t feel rested</span></label>
+    <label><input type="radio" name="q6" value="blue"><span>Sleeping too much but still waking up drained</span></label>
+    <label><input type="radio" name="q6" value="green"><span>Deep, steady sleep that leaves me feeling restored</span></label>
+  </fieldset>
+    <fieldset id="xyz_step7"><legend>7. My emotional world feels:</legend>
+    <label><input type="radio" name="q7" value="red"><span>Intense and unpredictable—like I’m constantly managing explosions</span></label>
+    <label><input type="radio" name="q7" value="yellow"><span>Overstimulating and exhausting—I’m always carrying too much</span></label>
+    <label><input type="radio" name="q7" value="blue"><span>Distant or flat—I struggle to feel anything at all</span></label>
+    <label><input type="radio" name="q7" value="green"><span>Steady and connected—I can feel things without being overwhelmed</span></label>
+  </fieldset>
+  <fieldset id="xyz_step8">
+     <div class="klaviyo-form-WVpEGZ"></div>
+  </fieldset>
+  <!-- Add questions 4–7 the same way, following this structure -->
+
+  <button type="button" onclick="calculateXYZResults()">Submit</button>
+</form>
+  <div id="result" style="display:none;">
+    <h3>Your Results: What Nervous System State Are You In? </h3>
+    <div class="result-text" id="xyz-result-text"></div>
+    <br>
+    <p style="color: #000;"><strong>Ready to support your nervous system and feel more regulated—every day?</strong></p>
+    <p style="color: #000;font-size: 14px;" ><a class="reset_formmm_btn" href="https://www.somawithin.com/#soma_30">Join the 30-Day Nervous System Reset</a></p>
+    <p style="color: #000;font-size: 14px;">Feel calmer, safer, and more connected to your body—in just 5–20 minutes a day.</p>
+    <a class="reset_formmm" href="https://www.somawithin.com/pages/reset-program">Reset Program</a>
+  </div>
+    <div id="result-error" class="scroll-trigger animate--slide-in" style="display: none;">
+      <div class="result-text"></div>
+    </div>
+    </div>
+  </div>
+ 

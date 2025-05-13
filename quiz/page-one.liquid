@@ -1,0 +1,175 @@
+  <div class="survey">
+    <!-- Toggle Buttons -->
+    <div class="form-toggle-buttons">
+      <!-- <button class="toggle-btn" onclick="showForm('abc', this)">Start Quiz </button> -->
+     {% comment %} <button class="toggle-btn" onclick="showForm('xyz', this)">What Nervous System State Are You In? </button> {% endcomment %}
+     <h1>Quiz</h1>
+    </div>
+
+    <!-- ABC Form -->
+    <div class="container" id="form-abc">
+    <form id="surveyForm">
+      <fieldset id="step_form_one" class="scroll-trigger animate--slide-in active">
+        <legend>1. When I feel overwhelmed, I often notice...</legend>
+        <label>
+          <input type="radio" name="q1" value="red">
+          <span>My jaw tightens or I get a tension headache</span>
+        </label>
+        <label>
+          <input type="radio" name="q1" value="orange">
+          <span>My chest feels heavy or I struggle to breathe</span>
+        </label>
+        <label>
+          <input type="radio" name="q1" value="blue">
+          <span>My stomach flips, bloats, or gets uncomfortable</span>
+        </label>
+        <label>
+          <input type="radio" name="q1" value="yellow">
+          <span>My shoulders ache or feel weighed down</span>
+        </label>
+        <label>
+          <input type="radio" name="q1" value="purple">
+          <span>My hips tighten or lower back feels stiff</span>
+        </label>
+        <label>
+          <input type="radio" name="q1" value="black">
+          <span>I go numb or feel disconnected from my body</span>
+        </label>
+      </fieldset>
+
+      <fieldset id="step_form_two" class="scroll-trigger animate--slide-in">
+        <legend>2. Emotionally, I tend to...</legend>
+        <label>
+          <input type="radio" name="q2" value="red">
+          <span>Hold back what I want to say</span>
+        </label>
+        <label>
+          <input type="radio" name="q2" value="orange">
+          <span>Feel on edge, anxious, or heartbroken</span>
+        </label>
+        <label>
+          <input type="radio" name="q2" value="blue">
+          <span>Worry about safety, belonging, or being judged</span>
+        </label>
+        <label>
+          <input type="radio" name="q2" value="yellow">
+          <span>Overfunction, take care of everyone else</span>
+        </label>
+        <label>
+          <input type="radio" name="q2" value="purple">
+          <span>Struggle with intimacy, grief, or loss</span>
+        </label>
+        <label>
+          <input type="radio" name="q2" value="black">
+          <span>Feel flat, numb, or like I’m not fully here</span>
+        </label>
+      </fieldset>
+
+      <fieldset id="step_form_third" class="scroll-trigger animate--slide-in">
+        <legend>3. My body most often feels...</legend>
+        <label>
+          <input type="radio" name="q3" value="red">
+          <span>Tense in my jaw, face, or scalp</span>
+        </label>
+        <label>
+          <input type="radio" name="q3" value="orange">
+          <span>Tight or compressed in my chest</span>
+        </label>
+        <label>
+          <input type="radio" name="q3" value="blue">
+          <span>Bloated, nauseous, or off in the gut</span>
+        </label>
+        <label>
+          <input type="radio" name="q3" value="yellow">
+          <span>Braced in my shoulders or upper back</span>
+        </label>
+        <label>
+          <input type="radio" name="q3" value="purple">
+          <span>Stiff in my hips, pelvis, or lower back</span>
+        </label>
+        <label>
+          <input type="radio" name="q3" value="black">
+          <span>Heavy, foggy, or checked out</span>
+        </label>
+      </fieldset>
+
+      <fieldset id="step_form_fir" class="scroll-trigger animate--slide-in">
+        <legend>4. When I'm emotionally triggered, I tend to...</legend>
+        <label>
+          <input type="radio" name="q4" value="red">
+          <span>Get headaches, clench my jaw, or feel pressure in my head</span>
+        </label>
+        <label>
+          <input type="radio" name="q4" value="orange">
+          <span>Breathe shallowly or feel like I’m suffocating</span>
+        </label>
+        <label>
+          <input type="radio" name="q4" value="blue">
+          <span>Lose my appetite or feel a pit in my stomach</span>
+        </label>
+        <label>
+          <input type="radio" name="q4" value="yellow">
+          <span>Feel like I need to hold everything together</span>
+        </label>
+        <label>
+          <input type="radio" name="q4" value="purple">
+          <span>Get aches or tension in my lower body</span>
+        </label>
+        <label>
+          <input type="radio" name="q4" value="black">
+          <span>Space out, dissociate, or go blank</span>
+        </label>
+      </fieldset>
+
+      <fieldset id="step_form_five" class="scroll-trigger animate--slide-in">
+        <legend>5. If my body could speak, it would say</legend>
+        <label>
+          <input type="radio" name="q5" value="red">
+          <span>Let me speak. I’m tired of holding back.</span>
+        </label>
+        <label>
+          <input type="radio" name="q5" value="orange">
+          <span>Please help me breathe. I feel trapped.</span>
+        </label>
+        <label>
+          <input type="radio" name="q5" value="blue">
+          <span>I feel unsafe and I’m bracing for impact.</span>
+        </label>
+        <label>
+          <input type="radio" name="q5" value="yellow">
+          <span>I carry too much. I’m tired of protecting everyone.</span>
+        </label>
+        <label>
+          <input type="radio" name="q5" value="purple">
+          <span>I’m holding grief you haven’t touched yet.</span>
+        </label>
+        <label>
+          <input type="radio" name="q5" value="black">
+          <span>I feel numb. I don’t know how to be here.</span>
+        </label>
+      </fieldset>
+      <fieldset id="step_form_six" class="scroll-trigger animate--slide-in">
+        <div class="klaviyo-form-UfhY47"></div>
+      </fieldset>
+
+      <button type="button" onclick="calculateResults()">Submit</button>
+    </form>
+
+   <div id="result" class="scroll-trigger animate--slide-in" style="display: none;">
+      <h3>Your Results: Where Is Your Trauma Stored?</h3>
+      <div class="result-text"></div>
+      {% comment %} <button type="button" id="form-reset">Reset-Program</button>  {% endcomment %}
+      <a class="reset_formmm" href="https://www.somawithin.com/pages/reset-program">Reset-Program</a>
+    </div>  
+
+    <div id="result-error" class="scroll-trigger animate--slide-in" style="display: none;">
+      <div class="result-text"></div>
+    </div>
+      
+    </div>
+
+  </div>
+
+
+
+
