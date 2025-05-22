@@ -1,0 +1,31 @@
+  {% if product.metafields.custom.extra_product.value %}
+     <fieldset class="js product-form__input product-form__input--swatch extras-product">
+            <legend class="form__label"> Any Extras: </legend>
+            {% for product in product.metafields.custom.extra_product.value %}
+            <div class="extra-fields" data-to-variant-ids="{{ product.selected_or_first_available_variant.id }}">
+              <div class="extra-fields-one">
+                <div>
+                  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="right-tick not-is-default">
+                    <g clip-path="url(#clip0_4_705)">
+                    <path d="M12.5 0.5C19.1184 0.5 24.5 5.88161 24.5 12.5C24.5 19.1184 19.1184 24.5 12.5 24.5C5.88161 24.5 0.5 19.1184 0.5 12.5C0.5 5.88161 5.88161 0.5 12.5 0.5Z" stroke="#C3937D"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_4_705">
+                    <rect width="25" height="25" fill="white"/>
+                    </clipPath>
+                    </defs>
+                  </svg>
+                   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="right-tick is-it-default">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 0C5.60547 0 0 5.60547 0 12.5C0 19.3945 5.60547 25 12.5 25C19.3945 25 25 19.3945 25 12.5C25 5.60547 19.3945 0 12.5 0Z" fill="#C3937D"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5444 8.28613C18.8472 8.58887 18.8472 9.08691 18.5444 9.38965L11.2202 16.7139C11.0688 16.8652 10.8687 16.9434 10.6685 16.9434C10.4683 16.9434 10.2681 16.8652 10.1167 16.7139L6.45459 13.0518C6.15186 12.749 6.15186 12.251 6.45459 11.9482C6.75732 11.6455 7.25537 11.6455 7.55811 11.9482L10.6685 15.0586L17.4409 8.28613C17.7437 7.97852 18.2417 7.97852 18.5444 8.28613Z" fill="white"/>
+                  </svg>
+                  <p class="heading">{{ product.title }}</p>
+                </div>
+                <p data-extra-price="{{ product.price | money_with_currency }}" class="price">{{ product.price | money_with_currency }}</p> 
+              </div>
+              <p>{{ product.description }}</p>   
+             </div>
+            {% endfor %}  
+        </fieldset> 
+      {% endif %}
+  {%- endunless -%}
