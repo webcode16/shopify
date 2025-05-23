@@ -1,0 +1,39 @@
+setupStepForm() {
+    const fieldsets = this.querySelectorAll('fieldset.product-form__input');
+    const nextBtn = this.querySelector('.btn-next'); // "Next" button
+    const prevBtn = this.querySelector('.btn-prev'); // NEW: "Previous" button
+
+    if (!fieldsets.length || !nextBtn || !prevBtn) return;
+
+    const updateFieldsets = () => {
+      fieldsets.forEach((fs, i) => {
+        fs.style.display = i === this.currentIndex ? 'block' : 'none';
+      });
+
+      // Show/hide buttons based on current step
+      prevBtn.style.display = this.currentIndex > 0 ? 'inline-block' : 'none';
+      nextBtn.style.display = this.currentIndex >= fieldsets.length - 1 ? 'none' : 'inline-block';
+
+      // Save step in localStorage
+      localStorage.setItem('currentStep', this.currentIndex);
+    };
+
+    // "Next" button click
+    nextBtn.addEventListener('click', () => {
+      if (this.currentIndex < fieldsets.length - 1) {
+        this.currentIndex++;
+        updateFieldsets();
+      }
+    });
+
+    // NEW: "Previous" button click
+    prevBtn.addEventListener('click', () => {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        updateFieldsets();
+      }
+    });
+
+    // Initial setup
+    updateFieldsets();
+  }
