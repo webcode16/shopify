@@ -219,6 +219,7 @@ document.getElementById('subscribe-now-btns').addEventListener('click', function
     .then(data => {
         console.log('Success:', data);
         // window.location.href = '/cart'; // Optional: redirect to cart page
+     // star   
       document.querySelectorAll('.add-to-cart').forEach(function(element) {
               element.classList.remove('adding');
           });
