@@ -1,0 +1,29 @@
+        {% assign first_collection = product.collections.first %}     
+        {% if first_collection and first_collection.metafields.custom.frequently_bought_together != blank %}
+          {% assign related_products = first_collection.metafields.custom.frequently_bought_together.value %}
+          <div class="bundle_product_app is-collapse">
+            <h3 class="heading">{{ block.settings.heading }}</h3>
+            <div class="inside_d_flex_bundle" bundle_apk>
+              <div class="inside_bundle">
+                {% assign total_bundle_price = 0 %}
+                {% for product in related_products %}
+                  <div class="under_bundle_product" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                    <div class="featured_image">
+                      <img src="{{ product.featured_image | image_url: width: 75 }}" alt="featured_image">
+                    </div>
+                    <p class="title">{{ product.title | truncatewords: 5 }}</p>
+                  </div>
+                  {% assign total_bundle_price = total_bundle_price | plus: product.price %}
+                  {% unless forloop.last %}
+                    <span class="plus">+</span>
+                  {% endunless %}
+                {% endfor %}
+              </div>
+              {% if product.available %}
+              <button class="buy_bundle btn btn--overlay btn--secondary">Buy Bundle • {{ total_bundle_price | money }}</button>
+              {% else %}
+              <button class="buy_bundle btn btn--overlay btn--secondary" style="cursor: not-allowed;" disabled>Sold Out • {{ total_bundle_price | money }}</button> 
+              {% endif %}  
+              </div>
+          </div>  
+        {% endif %}
