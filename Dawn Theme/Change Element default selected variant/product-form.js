@@ -164,12 +164,13 @@ if (!customElements.get('product-info')) {
       handleUpdateProductInfo(productUrl) {
         return (html) => {
           const variant = this.getSelectedVariant(html);
-          // ✅ Update variant description
+          // ✅ Start Update variant description
           const newDescription = html.getElementById(`VariantDescription-${this.dataset.section}`);
           const currentDescription = this.querySelector(`#VariantDescription-${this.dataset.section}`);
           if (newDescription && currentDescription) {
             currentDescription.innerHTML = newDescription.innerHTML;
           }
+          // End
 
           this.pickupAvailability?.update(variant);
           this.updateOptionValues(html);
@@ -420,3 +421,4 @@ if (!customElements.get('product-info')) {
     }
   );
 }
+
