@@ -1,0 +1,31 @@
+  <div class="free-addons-box">
+                    <h3>{{ block.settings.free_addons_title }}</h3>
+                    {% assign addon_product = product.metafields.custom.addons.value %}
+                    <div class="addon-product" id="addon-box">
+                      {% for variant in addon_product.variants %}
+                        <div class="addon-row">
+                          <span class="addon-title">{{ variant.title }}</span>
+                          {% comment %} <span class="addon-price">{{ variant.price | money }}</span> {% endcomment %}
+
+                          <div class="addon-qty-box">
+                            <label class="quantity__label form__label" for="Quantity" aria-labelledby="quantity-label">Quantity</label>
+                            <div class="qty-control">                              
+                              <button type="button" class="qty-btn minus">−</button>
+                              <input 
+                                type="number" 
+                                data-variant="{{ variant.id }}"
+                                value="0" 
+                                min="0" 
+                                {% if variant.inventory_management %}
+                                  max="{{ variant.inventory_quantity }}"
+                                {% else %}
+                                  max="10"
+                                {% endif %}
+                                class="qty-input">
+                              <button type="button" class="qty-btn plus">+</button>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>                  
+                </div>
