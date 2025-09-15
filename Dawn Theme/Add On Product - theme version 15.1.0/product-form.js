@@ -70,6 +70,7 @@ if (!customElements.get('product-form')) {
               return;
             }
 
+        // ***************** start here *****************
          const addExtrasToCart = async () => {
          const selectedExtras = document.body.querySelectorAll('.extra-fields.active');
           for (const extra of selectedExtras) {
@@ -88,10 +89,9 @@ if (!customElements.get('product-form')) {
               body: addonData,
             });
           }
-      };
-
-
-            await addExtrasToCart();
+        };
+        await addExtrasToCart();
+     // ***************** end here *****************
 
             if (!this.error) {
               publish(PUB_SUB_EVENTS.cartUpdate, {
@@ -167,3 +167,4 @@ if (!customElements.get('product-form')) {
     }
   );
 }
+
