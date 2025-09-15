@@ -1,0 +1,192 @@
+<style>
+/* add_on_product css start */
+
+.main_addon_product .extras-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.main_addon_product .extra-option:first-child {
+  padding-top: 16px;
+}
+.main_addon_product .extra-option-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.main_addon_product .extra-image {
+    line-height: 0;
+}
+.extras-wrapper.main_addon_product {
+    border: 1px solid #000000;
+    border-radius: 12px;
+    padding: 30px 18px 18px 18px;
+    position: relative;
+    margin-top: 38px;
+}
+.main_addon_product .under-extra-image-title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.extras-wrapper.main_addon_product .heading {
+    margin: 0;
+    background: #ffffff;
+    padding: 0 6px;
+    display: inline-block;
+    position: absolute;
+    top: -12px;
+    font-size: 22px;
+    color: #000000;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.main_addon_product .extra-icon svg {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.main_addon_product .extra-text {
+  flex-grow: 1;
+}
+
+.main_addon_product .extra-title {
+  font-weight: 700;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+.main_addon_product .extra-fields {
+    border-bottom: 1px solid #000000;
+    padding-top: 8px;
+}
+.main_addon_product .extra-fields:last-child{
+    border-bottom: 0;
+}
+.main_addon_product .extra-fields::first-child{
+    padding-top: 0;
+}
+.main_addon_product .extra-fields{
+    padding-top: 10px;
+}
+.main_addon_product .extra-subtext {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.main_addon_product .extra-price {
+  font-weight: 700;
+  color: #000000;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.main_addon_product .extra-toggle {
+  flex-shrink: 0;
+}
+
+/* Toggle Switch */
+.main_addon_product .switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.main_addon_product .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.main_addon_product .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+.main_addon_product .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+.main_addon_product input:checked + .slider {
+  background-color: #000000;
+}
+.main_addon_product input:checked + .slider:before {
+  transform: translateX(20px);
+}
+/* add_on_product end css */
+</style>
+{% when 'add_on_product' %} 
+                {% if product.metafields.custom.add_on_product.value %}
+                    <div class="extras-wrapper main_addon_product">
+                      <h3 class="heading">{{ block.settings.heading }}</h3>
+                      {% for product in product.metafields.custom.add_on_product.value %}
+                        <div class="extra-fields" data-to-variant-ids="{{ product.selected_or_first_available_variant.id }}">
+                          <div class="extra-option-content">
+                            <div class="under-extra-image-title">
+                              <div class="extra-image">
+                                <img src="{{ product.featured_image | img_url: 'small' }}" alt="product_img"> 
+                              </div>
+                              <div clsass="extra-text">
+                                <p class="extra-title">{{ product.title }}</p>
+                                <p class="extra-price">{{ product.price | money_with_currency }}</p>
+                                <div>
+                              <div class="extra-toggle">
+                                <label class="switch">
+                                  <input class="addon-checkbox" type="checkbox" name="properties[{{ product.title }}]" value="{{ product.title }}">
+                                  <span class="slider round"></span>
+                                </label>
+                              </div>
+                            </div>
+                              </div>
+                            </div>
+                            <div class="variant-selection">
+                              {% assign package_index = nil %}
+                              {% for option in product.options_with_values %}
+                                {% if option.name == 'Product Package' %}
+                                  {% assign package_index = forloop.index0 %}
+                                {% endif %}
+                              {% endfor %}
+                              <select name="id" class="custom-package-selector" {% if package_index == nil %}style="display: none;"{%endif %}>
+                                {% for variant in product.variants %}
+                                  <option value="{{ variant.id }}"
+                                    {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %}
+                                    {% unless variant.available %}disabled{% endunless %}>
+                                    {{ variant.options[package_index] }}
+                                    {% unless variant.available %}(Out of stock){% endunless %}
+                                  </option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                {% endif %}  
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkboxes = document.querySelectorAll('.addon-checkbox');
+      checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+          const extraField = this.closest('.extra-fields');
+          if (this.checked) {
+            extraField.classList.add('active');
+          } else {
+            extraField.classList.remove('active');
+          }
+        });
+      });
+    });
+  </script>
