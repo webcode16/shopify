@@ -1,0 +1,170 @@
+{% if product.variants.size > 1 %}
+<div class="main-variant-slider">
+  <div class="inside-variant-slider">
+  {% for variant in product.variants %}
+  <div class="variant-slider" id="variant-{{ variant.id }}" data-variant-value="{{ variant.title }}">
+    <!-- Main Slider -->
+    <div class="swiper swiper-main">
+      <div class="swiper-wrapper">
+        {% if variant.metafields.custom.alternative_images %}
+          {% for img in variant.metafields.custom.alternative_images.value %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: img %}
+            </div>
+          {% endfor %}
+        {% elsif variant.featured_image %}
+          <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+            {% render 'image-element', img: variant.featured_image %}
+          </div>
+        {% else %}
+          {% for media in product.media %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: media %}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% if product.metafields.custom.alternate_images %}
+          {% for media in product.metafields.custom.alternate_images.value %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: media %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="swiper-button-next next-{{ variant.id }}"></div>
+      <div class="swiper-button-prev prev-{{ variant.id }}"></div>
+    </div>
+
+    <!-- Thumbnail Slider -->
+    <div class="swiper swiper-thumbs">
+      <div class="swiper-wrapper">
+        {% if variant.metafields.custom.alternative_images %}
+          {% for img in variant.metafields.custom.alternative_images.value %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: img %}
+            </div>
+          {% endfor %}
+        {% elsif variant.featured_image %}
+          <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+            {% render 'image-element', img: variant.featured_image %}
+          </div>
+        {% else %}
+          {% for media in product.media %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: media %}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% if product.metafields.custom.alternate_images %}
+          {% for media in product.metafields.custom.alternate_images.value %}
+            <div class="swiper-slide" data-variant-id="{{ variant.title }}">
+              {% render 'image-element', img: media %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+      const thumbs{{ variant.id }} = new Swiper("#variant-{{ variant.id }} .swiper-thumbs", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+      });
+
+      const mainSlider{{ variant.id }} = new Swiper("#variant-{{ variant.id }} .swiper-main", {
+        spaceBetween: 10,
+        navigation: {
+          nextEl: ".next-{{ variant.id }}",
+          prevEl: ".prev-{{ variant.id }}",
+        },
+        thumbs: {
+          swiper: thumbs{{ variant.id }},
+        },
+      });
+    </script>
+  </div>
+  {% endfor %}
+  </div>
+</div>
+{% else %}
+ <section class="product-images-splide splide" aria-label="">
+    <div class="splide__track ff">
+      <ul class="splide__list">
+        {% if product.metafields.custom.hero_image.value %}
+          <li class="splide__slide">
+            {% render 'image-element', img: product.metafields.custom.hero_image.value %}
+          </li>
+        {% endif %}
+        {% if product.variants.size > 1 %}
+        {% else %}
+          {% for media in product.media %}
+            <li class="splide__slide">
+              {% render 'image-element', img: media.preview_image %}
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+</section> 
+{% endif %}
+
+
+{% comment %} variant buttons {% endcomment %}
+ <div class="product-block" data-dynamic-variants-enabled=""><div class="variant-wrapper js" data-type="button">
+  <label class="variant__label hidden-label" for="ProductSelect-template--25928077443360__main-9839171502368-option-0">
+    Custom Colors <span style=" font-size: 18px; font-weight: 600; ">(+$200)</span>
+    
+    
+<span class="variant__label-info">
+        —
+        <span data-variant-color-label="" data-index="0" data-option-index="0">
+          Grey
+        </span>
+      </span></label><fieldset class="variant-input-wrap" name="Color" data-index="option1" data-handle="color" id="ProductSelect-template--25928077443360__main-9839171502368-option-0">
+    <legend class="hide">Color</legend>
+    
+
+        
+          
+            <div class="options-label">Colors</div>
+          
+          
+        
+      
+      <div class="variant-input" data-index="option1" data-value="Grey">
+        <input type="radio" form="AddToCartForm-template--25928077443360__main-9839171502368" checked="checked" value="Grey" data-index="option1" name="Color" data-variant-input="" data-variant-id="5525724922144" class=" variant__input--color-swatch" data-color-name="Grey" data-color-index="0" id="ProductSelect-template--25928077443360__main-9839171502368-option-color-Grey"><label for="ProductSelect-template--25928077443360__main-9839171502368-option-color-Grey" class="variant__button-label color-swatch color-swatch--grey" style="background-color: #bcbec2">
+            Grey
+          </label></div>
+        
+      
+      <div class="variant-input" data-index="option1" data-value="Black">
+        <input type="radio" form="AddToCartForm-template--25928077443360__main-9839171502368" value="Black" data-index="option1" name="Color" data-variant-input="" data-variant-id="5012345618720" class=" variant__input--color-swatch" data-color-name="Black" data-color-index="0" id="ProductSelect-template--25928077443360__main-9839171502368-option-color-Black"><label for="ProductSelect-template--25928077443360__main-9839171502368-option-color-Black" class="variant__button-label color-swatch color-swatch--black" style="background-color: black;">
+            Black
+          </label></div>
+        
+      
+      <div class="variant-input" data-index="option1" data-value="Slate Blue">
+        <input type="radio" form="AddToCartForm-template--25928077443360__main-9839171502368" value="Slate Blue" data-index="option1" name="Color" data-variant-input="" data-variant-id="5218412888352" class=" variant__input--color-swatch" data-color-name="Slate Blue" data-color-index="0" id="ProductSelect-template--25928077443360__main-9839171502368-option-color-Slate+Blue"><label for="ProductSelect-template--25928077443360__main-9839171502368-option-color-Slate+Blue" class="variant__button-label color-swatch color-swatch--slate-blue" style="background-color: blue;">
+            Slate Blue
+          </label></div>
+        
+      
+      <div class="variant-input" data-index="option1" data-value="Green">
+        <input type="radio" form="AddToCartForm-template--25928077443360__main-9839171502368" value="Green" data-index="option1" name="Color" data-variant-input="" data-variant-id="5405117350176" class=" variant__input--color-swatch" data-color-name="Green" data-color-index="0" id="ProductSelect-template--25928077443360__main-9839171502368-option-color-Green"><label for="ProductSelect-template--25928077443360__main-9839171502368-option-color-Green" class="variant__button-label color-swatch color-swatch--green" style="background-color: green;">
+            Green
+          </label></div></fieldset>
+</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () { function showSelectedColor(color) { document.querySelectorAll('.variant-slider').forEach(li => { li.style.display = 'none'; }); const datamediaColors = document.querySelectorAll( `.variant-slider[data-variant-value="${color}"]` ); datamediaColors.forEach(li => { li.style.display = 'block'; }); } document.body.addEventListener('change', function (e) { if (e.target && e.target.matches('input[name^="Color"]')) { const selectedColor = e.target.value; showSelectedColor(selectedColor); console.log('selectedColor' + selectedColor); } }); const checkedRadio = document.querySelector('input[name^="Color"]:checked'); const sliderssmake = document.querySelector('.inside-variant-slider'); if (checkedRadio) { if (sliderssmake) { sliderssmake.style.display = 'block'; } const selectedColor = checkedRadio.value; showSelectedColor(selectedColor); } });  
+</script>
