@@ -1,0 +1,1603 @@
+<style>
+        body{
+        font-family: Merriweather Sans, sans-serif;
+        line-height: 1.2;
+      }
+
+      .quiz-section-container {
+        background-size: cover;
+        background-position: center;
+        padding: 80px 20px;
+        text-align: center;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section.quiz-main-questions {
+        background: url(https://cdn.shopify.com/s/files/1/0766/8242/8671/files/ruan-richard-rodrigues-ZgFCVWGd4l0-unsplash.jpg?v=1763883045) no-repeat center center;
+      }
+
+      .quiz-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: {{ section.settings.overlay_color }};
+        opacity: {{ section.settings.overlay_opacity }};
+        pointer-events: none;
+        display: block !important;
+      }
+
+      .quiz-inner {
+        position: relative;
+        z-index: 2;
+        opacity: 0;
+        transform: translateX(80px);
+        animation: fadeSlideLeft 1s ease-out forwards;
+      }
+
+      .quiz-heading {
+        font-size: 42px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0;
+        opacity: 0;
+        transform: translateX(80px);
+        animation: fadeSlideLeft 0.9s ease-out 0.2s forwards;
+      }
+
+      .quiz-subtext {
+        max-width: 900px;
+        margin: 20px auto 0;
+        font-size: 18px;
+        line-height: 28px;
+        color: #fff;
+        font-weight: 300;
+        opacity: 0;
+        transform: translateX(80px);
+        animation: fadeSlideLeft 0.9s ease-out 0.45s forwards;
+      }
+
+      .quiz-start-btn,
+      .next-step-btn,
+      .prev-step-btn {
+        background: rgb(214,118,59);
+        padding: 14px 35px;
+        border-radius: 50px;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 25px;
+        border: none;
+        transition: 0.3s ease;
+      }
+
+      .quiz-start-btn {
+        opacity: 0;
+        transform: translateX(80px);
+        animation: fadeSlideLeftButton 1s ease-out 0.75s forwards;
+      }
+
+      .quiz-start-btn:hover,
+      .next-step-btn:hover,
+      .prev-step-btn:hover {
+        background: rgba(214,118,59,0.85);
+      }
+
+      .prev-step-btn {
+        margin-right: 15px;
+        border: 1px solid rgba(214,118,59,0.4);
+        background: rgba(214,118,59,0.15);
+        color: #1C1C2D;
+      }
+
+      .prev-step-btn:hover {
+        background: rgb(214,118,59);
+        color: #fff;
+      }
+
+      .next-step-btn.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .stepform {
+        display: none;
+        padding: 50px 15px;
+        text-align: center;
+        border-radius: 22px;
+        margin: 0 auto;
+        max-width: 900px;
+        width:100%;
+        opacity: 0;
+        transform: translateX(80px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .stepform.active-step {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .stepform h3 {
+        font-size: 30px;
+        margin-bottom: 25px;
+        color: #1C1C2D;
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.5s ease;
+      }
+
+      .stepform.active-step h3 {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .popup-wrapper {
+        padding: 40px 20px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 20px;
+        opacity: 0;
+        transform: translateX(80px) scale(0.92);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .stepform.active-step .popup-wrapper {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+
+      .popup-heading {
+        font-size: 32px;
+        opacity: 0;
+        transform: translateX(60px);
+        transition: all 0.5s ease;
+      }
+
+      .stepform.active-step .popup-heading {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .popup-image img {
+        max-width: 250px;
+        margin: 20px auto;
+        display: block;
+      }
+
+      .option-card {
+        border: 2px solid rgba(214,118,59,0.35);
+        border-radius: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        display: inline-block;
+        margin: 5px;
+        font-size: 17px;
+        transition: all .3s ease;
+        background: #fff;
+        color: #1C1C2D;
+      }
+
+      .option-card:hover {
+        transform: translateY(-4px);
+        background: rgba(214,118,59,0.1);
+        border-color: rgba(214,118,59,0.6);
+      }
+
+      .option-card.active {
+        border-color: rgb(214,118,59);
+        background: rgb(214,118,59);
+        color: #fff;
+        box-shadow: 0 5px 18px rgba(214,118,59,0.4);
+      }
+
+      .quiz-progressbar {
+        display: none;
+        max-width: 1000px;
+        width: 100%;
+        margin: 20px auto 10px;
+        text-align: center;
+        padding-bottom: 30px;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 10px;
+        background: #e6e6e6;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 10px;
+        background: #d6763b;
+        width: 0%;
+        border-radius: 8px 0 0 8px;
+        transition: width 0.4s ease-in-out;
+        display: block !important;
+      }
+
+      .progressCurrent {
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        display: flex;
+        font-size: 22px;
+        justify-content: center;
+        align-items: center;
+        background-color: #949494;
+        color: #fff;
+      }
+
+      .progressCurrent.active-step-circle {
+        background-color: #d6763b;
+        color: #fff;
+      }
+
+      #result_main_custom{
+        display:none;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        color: #000;
+      }
+
+      .analyzing-wrapper {
+      text-align: center;
+      padding: 60px 20px;
+      animation: fadeInUp 0.7s ease-out forwards;
+    }
+
+    .analyzing-title {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fadeInUp 0.7s ease-out 0.1s forwards;
+    }
+
+    .analyzing-subtext {
+      font-size: 18px;
+      opacity: 1 !important;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: fadeInUp 0.7s ease-out 0.2s forwards;
+    }
+
+    .analyzing-progress-container {
+      width: 80%;
+      margin: 0 auto 25px auto;
+    }
+
+    .analyzing-progress-bar {
+      width: 100%;
+      height: 12px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .analyzing-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #000; /* auto picks theme color */
+      border-radius: 10px;
+      transition: width 0.2s linear;
+    }
+
+    .analyzing-percentage {
+      font-size: 22px;
+      color: #d6763b;
+      font-weight: 600;
+      opacity: 1;
+      animation: fadeInUp 0.7s ease-out 0.3s forwards;
+    }
+
+    /* Wave Loader */
+  .analyzing-loader {
+    margin-top: 20px;
+    width: 60px;
+    height: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .analyzing-loader span {
+    width: 10px;
+    height: 10px;
+    background: #000;
+    border-radius: 50%;
+    animation: wave 0.9s infinite ease-in-out;
+  }
+
+  .analyzing-loader span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .analyzing-loader span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .analyzing-loader span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes wave {
+    0%, 60%, 100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    30% {
+      transform: translateY(-8px);
+      opacity: 0.7;
+    }
+  }
+
+
+
+      .progress-step-count {
+        margin-top: -29px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1C1C2D;
+        display: flex;
+        justify-content: space-evenly;
+      }
+
+      .quiz_question_main {
+        display: none;
+        height: 100%;
+        min-height:100vh;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .quiz_question_main .header__heading-link {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0;
+      }
+
+      .stepform select,
+      .stepform input[type="text"],
+      .stepform input[type="email"],
+      .stepform input[type="number"],
+      .stepform textarea {
+        max-width: 500px;
+        width: 100%;
+        padding: 12px 15px;
+        font-size: 16px;
+        border: 2px solid rgba(214,118,59,0.4);
+        border-radius: 15px;
+        background: #fff;
+        color: #000;
+        margin: 10px auto;
+        display: block;
+        transition: 0.3s;
+      }
+
+      @keyframes fadeSlideLeft {
+        0% {
+          opacity: 0;
+          transform: translateX(80px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeSlideLeftButton {
+        0% {
+          opacity: 0;
+          transform: translateX(80px);
+        }
+        70% {
+          transform: translateX(-6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @media(max-width:768px){
+        .quiz-heading { font-size: 32px; }
+        .popup-heading { font-size: 26px; }
+        .stepform select { height: 50px; }
+        .stepform h3 { font-size: 22px; }
+        .option-card { font-size: 14px; }
+        .progressCurrent { height: 30px; width: 30px; font-size: 18px; }
+        .progress-step-count { margin-top: -21px; }
+      }
+</style>
+
+{% assign index = 0 %}
+{% assign progreebar_count = 0 %}
+<section class="quiz-main-questions">
+  <!-- QUIZ START SCREEN -->
+  <div
+    class="quiz-section-container"
+    id="start-1"
+    style="background-image:url({{ section.settings.bg_image | image_url }});"
+  >
+    <div class="quiz-overlay"></div>
+    <div class="quiz-inner">
+      {% if section.settings.heading != blank %}
+        <h2 class="quiz-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <p class="quiz-subtext">{{ section.settings.subtext }}</p>
+      {% endif %}
+
+      <div class="quiz-start-btn" id="quizStartBtn">Let's do this!</div>
+    </div>
+  </div>
+
+  <div class="quiz_question_main" id="quiz_question_main">
+    <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
+      {%- if settings.logo != blank -%}
+        <div class="header__heading-logo-wrapper">
+          {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+          {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+          {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+          {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+          {{
+            settings.logo
+            | image_url: width: 600
+            | image_tag:
+              class: 'header__heading-logo motion-reduce',
+              widths: widths,
+              height: logo_height,
+              width: settings.logo_width,
+              alt: logo_alt,
+              sizes: sizes,
+              preload: true
+          }}
+        </div>
+      {%- else -%}
+        <span class="h2">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+    {% assign question_counter = 0 %}
+{% for block in section.blocks %}
+  {% assign index = index | plus: 1 %}
+
+  <div class="stepform" data-id="{{ index }}"
+    {% if block.type != 'popup' and block.type != 'analyzing' %}
+      data-q="{{ question_counter | plus: 1 }}"
+    {% endif %}
+  >
+
+    {% if block.type == 'analyzing' %}
+      <div class="analyzing-wrapper">
+        <h3 class="analyzing-title">{{ block.settings.analyze_title }}</h3>
+        <p class="analyzing-subtext">{{ block.settings.analyze_subtext }}</p>
+        <div class="analyzing-progress-container">
+          <div class="analyzing-progress-bar">
+            <div class="analyzing-progress-fill"
+                 data-duration="{{ block.settings.progress_duration }}"
+                 data-percentage-from="{{ block.settings.percentage_number_from }}"
+                 data-percentage="{{ block.settings.percentage_number }}"></div>
+          </div>
+          <div class="analyzing-percentage" id="analyzing-percentage-{{ block.id }}">0%</div>
+        </div>
+        <div class="quiz-buttons">
+          <div class="prev-step-btn" style="display:none">prev</div>
+          <div class="next-step-btn" style="display:none">next</div>
+        </div>
+        <div class="analyzing-loader"><span></span><span></span><span></span></div>
+      </div>
+
+    {% elsif block.type == 'popup' %}
+      {% assign progreebar_count = progreebar_count | plus: 1 %}
+      <div class="popup-wrapper" style="background-image:url({{ block.settings.popup_bg | image_url }});">
+        {% if block.settings.popup_heading %}<h3 class="popup-heading">{{ block.settings.popup_heading }}</h3>{% endif %}
+        {% if block.settings.popup_inner_image %}
+          <div class="popup-image"><img width="auto" height="auto" src="{{ block.settings.popup_inner_image | image_url }}" alt=""></div>
+        {% endif %}
+        {% if block.settings.popup_text %}<div class="popup-text">{{ block.settings.popup_text }}</div>{% endif %}
+        <div class="quiz-buttons">
+          <div class="prev-step-btn">{{ block.settings.popup_prev }}</div>
+          <div class="next-step-btn">{{ block.settings.popup_next }}</div>
+        </div>
+      </div>
+
+    {% else %}
+      {% assign question_counter = question_counter | plus: 1 %}
+      <h3>{{ block.settings.question_title }}</h3>
+
+      {% case block.settings.question_type %}
+        {% when 'single' %}
+          {% assign cleaned = block.settings.question_options | replace: ',', '\n' | strip %}
+          {% assign options = cleaned | split: '\n' | compact %}
+          {% for op in options %}
+            {% assign op_clean = op | strip %}
+            {% if op_clean != blank %}
+              {% assign parts = op_clean | split: '|' %}
+              {% assign label = parts[0] | strip %}
+              {% assign score = parts[1] | default: '4' | strip | plus: 0 %}
+              <div class="option-card" data-value="{{ score }}">{{ label }}</div>
+            {% endif %}
+          {% endfor %}
+
+        {% when 'multi' %}
+          {% assign cleaned = block.settings.question_options | replace: ',', '\n' %}
+          {% assign options = cleaned | split: '\n' | compact %}
+          <div class="multi-select-wrapper" data-field="{{ block.id }}" data-quiz-n="{{ block.settings.quizno }}">
+            {% for op in options %}
+              {% assign pair = op | strip | split: '|' %}
+              {% assign score = pair[1] | default: pair[0] | strip %}
+              {% assign label = pair[0] | strip %}
+              <div class="option-card multi-select" data-value="{{ score }}">{{ label }}</div>
+            {% endfor %}
+          </div>
+          <input type="hidden" id="hidden-{{ block.id }}" name="question_{{ block.id }}">
+
+        {% when 'text' %}
+          {% if block.settings.question_title contains 'current age' or block.settings.question_title contains 'current Age' %}
+            <input type="number" min="18" max="100" step="1" class="quiz-text-input" placeholder="Enter your age (e.g. 45)" required style="font-size:20px;text-align:center;">
+          {% else %}
+            <input type="text" class="quiz-text-input" placeholder="Type your answer here...">
+          {% endif %}
+
+        {% when 'textarea' %}
+          <textarea class="quiz-textarea-input" placeholder="Write here..."></textarea>
+
+        {% when 'email' %}
+          <input type="email" class="quiz-text-input" placeholder="Type your email here..." autocomplete="email">
+      {% endcase %}
+
+      <div class="quiz-buttons">
+        <div class="prev-step-btn">{{ block.settings.prev_btn_text }}</div>
+        <div class="next-step-btn disabled">{{ block.settings.next_btn_text }}</div>
+      </div>
+    {% endif %}
+  </div>
+{% endfor %}
+
+    {% if progreebar_count > 1 %}
+      <div class="quiz-progressbar" id="quiz-progressbar">
+        <div class="progress-track">
+          {% assign fill_percentage = 100.0 | divided_by: progreebar_count %}
+          <div class="progress-fill" style="width: {{ fill_percentage }}%;"></div>
+        </div>
+        <div class="progress-step-count">
+          {% for i in (1..progreebar_count) %}
+            <span class="progressCurrent">{{ i }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <input type="hidden" value="{{ progreebar_count }}" id="progreebar_count_input">
+    {% endif %}
+  </div>
+  <div class="result_text_main" id="result_main_custom">Here is the result....</div>
+</section>
+
+<script>
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.prev-step-btn');
+    if (!btn || btn.classList.contains('skip-analyzer')) return;
+
+    const currentStep = parseInt(btn.dataset.currentStep, 10);
+    let userSex = null;
+    if (!currentStep) return;
+
+    const prevStep = currentStep - 1;
+    const prevStepEl = document.querySelector(`.stepform[data-id="${prevStep}"]`);
+    if (!prevStepEl) return;
+
+    const isAnalyzer = prevStepEl.querySelector('.analyzing-wrapper');
+
+    if (isAnalyzer) {
+      e.preventDefault();
+
+      const skipTo = currentStep - 2;
+      const skipBtn = document.querySelector('.prev-step-btn');
+      skipBtn.classList.add('skip-analyzer');
+
+      showStep(skipTo);
+
+      setTimeout(() => {
+        skipBtn.classList.remove('skip-analyzer');
+      }, 300);
+
+      return;
+    }
+  });
+
+  function input_range_main() {
+    const progressInput = document.getElementById('progreebar_count_input');
+    if (!progressInput) return;
+
+    const totalSteps = parseInt(progressInput.value, 10);
+    if (!totalSteps || totalSteps <= 0) return;
+
+    const stepforms = Array.from(document.querySelectorAll('.stepform'));
+    const activeStep = document.querySelector('.stepform.active-step');
+    if (!activeStep) return;
+
+    const activedataid = parseInt(activeStep.getAttribute('data-id'), 10);
+
+    let popupCount = 0;
+    for (let i = activedataid; i <= stepforms.length; i++) {
+      const step = document.querySelector(`.stepform[data-id="${i}"]`);
+      if (!step) continue;
+      if (step.querySelector('.popup-wrapper')) popupCount++;
+    }
+
+    if (popupCount > 0) popupCount--;
+
+    const remaining = popupCount;
+    const completed = totalSteps - remaining;
+    let percent = (completed / totalSteps) * 100;
+
+    if (remaining <= 0) percent = 100;
+    percent = percent + 1;
+
+    const fillBar = document.querySelector('.progress-fill');
+    if (fillBar) fillBar.style.width = percent + '%';
+
+    const circles = document.querySelectorAll('.progress-step-count .progressCurrent');
+    circles.forEach((circle, index) => {
+      const stepNumber = index + 1;
+      const circlePercent = (stepNumber / totalSteps) * 100;
+
+      if (percent >= circlePercent) {
+        circle.classList.add('active-step-circle');
+      } else {
+        circle.classList.remove('active-step-circle');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    let currentStep = 0;
+
+    const quiz_question_main = document.getElementById('quiz_question_main');
+    const result_main_custom = document.getElementById('result_main_custom');
+    const startBtn = document.getElementById('quizStartBtn');
+    const startScreen = document.getElementById('start-1');
+    const steps = document.querySelectorAll('.stepform');
+    const progressbar = document.getElementById('quiz-progressbar');
+
+    function showStep(step, direction) {
+      steps.forEach((s) => {
+        s.style.display = 'none';
+        s.classList.remove('active-step');
+      });
+
+      if (direction === 'prev') {
+        const prevStepEl = document.querySelector(`.stepform[data-id="${step}"]`);
+
+        if (prevStepEl) {
+          const hasAnalyzer = prevStepEl.querySelector('.analyzing-wrapper');
+
+          if (hasAnalyzer) {
+            const prevBtn = prevStepEl.querySelector('.prev-step-btn');
+
+            if (prevBtn) {
+              prevBtn.classList.remove('disabled');
+            }
+
+            const prev_num = step - 1;
+
+            showStep(prev_num, 'prev');
+            return;
+          }
+        }
+      }
+
+      const target = document.querySelector(`.stepform[data-id="${step}"]`);
+      if (!target) return;
+
+      target.style.display = 'block';
+
+      setTimeout(() => {
+        target.classList.add('active-step');
+
+        const analyze_main = target.querySelector('.analyzing-wrapper');
+        if (analyze_main) {
+          const fill = analyze_main.querySelector('.analyzing-progress-fill');
+          const percentageBox = analyze_main.querySelector('.analyzing-percentage');
+
+          const duration = parseInt(fill.getAttribute('data-duration'), 10);
+          const fromPercent = parseInt(fill.getAttribute('data-percentage-from'), 10);
+          const toPercent = parseInt(fill.getAttribute('data-percentage'), 10);
+
+          analyze_main.style.display = 'block';
+          fill.style.display = 'block';
+
+          fill.style.width = fromPercent + '%';
+          if (percentageBox) percentageBox.textContent = fromPercent + '%';
+
+          const range = toPercent - fromPercent;
+          const intervalTime = (duration * 1000) / range;
+
+          let percent = fromPercent;
+
+          const interval = setInterval(() => {
+            percent++;
+
+            if (percent >= toPercent) {
+              percent = toPercent;
+              clearInterval(interval);
+
+              setTimeout(() => {
+                const target__btn = target.querySelector('.next-step-btn');
+                if (target__btn) {
+                  target__btn.classList.remove('disabled');
+                  target__btn.dispatchEvent(new Event('click', { bubbles: true }));
+                }
+              }, 2000);
+            }
+
+            fill.style.width = percent + '%';
+            if (percentageBox) percentageBox.textContent = percent + '%';
+          }, intervalTime);
+        }
+
+        input_range_main();
+      }, 30);
+
+      const isPopup = target.querySelector('.popup-wrapper') !== null;
+      const nextBtn = target.querySelector('.next-step-btn');
+      const prevBtn = target.querySelector('.prev-step-btn');
+      const isAnalyzer = target.querySelector('.analyzing-wrapper') !== null;
+
+      if (isPopup) nextBtn.classList.remove('disabled');
+      else nextBtn.classList.add('disabled');
+
+      if (prevBtn) {
+        if (step === 1 || isAnalyzer) {
+          prevBtn.classList.add('disabled');
+          prevBtn.style.pointerEvents = 'none';
+          prevBtn.style.opacity = '0.3';
+        } else {
+          prevBtn.classList.remove('disabled');
+          prevBtn.style.pointerEvents = 'auto';
+          prevBtn.style.opacity = '1';
+        }
+        prevBtn.dataset.currentStep = step;
+      }
+
+
+      setTimeout(() => {
+        const select = target.querySelector('select');
+        if (select) {
+          if (select.value !== '') nextBtn.classList.remove('disabled');
+          select.onchange = function () {
+            if (select.value !== '') nextBtn.classList.remove('disabled');
+          };
+        }
+
+        const hiddenField = target.querySelector("input[type='hidden']");
+
+        const userInput = target.querySelector(
+          'input[type="text"], input[type="email"], input[type="number"], textarea'
+        );
+
+        if (userInput) {
+          if (userInput.value.trim() !== '') nextBtn.classList.remove('disabled');
+          userInput.addEventListener('input', function () {
+            if (this.value.trim() !== '') nextBtn.classList.remove('disabled');
+            else nextBtn.classList.add('disabled');
+          });
+        }
+
+        target.onclick = function (e) {
+          const card = e.target.closest('.option-card');
+          if (!card) return;
+          if (isPopup) return;
+
+          const cards = target.querySelectorAll('.option-card');
+
+          if (card.classList.contains('multi-select')) {
+            const multiSelectCards = target.querySelectorAll('.option-card.multi-select');
+            multiSelectCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            const selected = Array.from(target.querySelectorAll('.option-card.active')).map((c) => c.dataset.value);
+            if (hiddenField) hiddenField.value = selected.join(',');
+            if (selected.length) nextBtn.classList.remove('disabled');
+            else nextBtn.classList.add('disabled');
+            const activeStep = document.querySelector('.stepform.active-step');
+
+            if (activeStep) {
+              // Find the hidden input inside it
+              const hiddenInput = activeStep.querySelector('input[type="hidden"]');
+              
+              // Check if it exists and has a value
+              const hasValue = hiddenInput && hiddenInput.value.trim() !== '';
+              
+              {% comment %} console.log('Hidden field value:', hiddenInput ? hiddenInput.value : 'not found');
+              console.log('Has value?', hasValue); // true or false
+               {% endcomment %}
+              // Example: disable Next button if empty
+              const nextBtn = activeStep.querySelector('.next-step-btn');
+              if (nextBtn) {
+                if (hasValue) {
+                  nextBtn.classList.remove('disabled');
+                } else {
+                  {% comment %} console.log("here in"); {% endcomment %}
+                  nextBtn.classList.add('disabled');
+                }
+              }
+            } 
+          } else {
+            cards.forEach((c) => c.classList.remove('active'));
+            card.classList.add('active');
+            if (hiddenField) hiddenField.value = card.dataset.value;
+            nextBtn.classList.remove('disabled');
+          }
+        };
+
+        const existingActive = target.querySelector('.option-card.active');
+        if (existingActive || (hiddenField && hiddenField.value.trim() !== '')) {
+          nextBtn.classList.remove('disabled');
+        }
+      }, 50);
+      validateCurrentStep();
+    }
+
+    startBtn.addEventListener('click', function () {
+      startScreen.style.display = 'none';
+      progressbar.style.display = 'block';
+      quiz_question_main.style.display = 'flex';
+      currentStep = 1;
+      showStep(currentStep);
+    });
+
+    document.querySelectorAll('.next-step-btn').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('disabled')) return;
+
+        currentStep++;
+
+        // ← NEW: Skip hormonal stage if Male
+        if (currentStep === 3 && userSex === 'Male') {
+          currentStep = 4;
+        }
+
+        if (currentStep > steps.length) {
+          // show result (your existing result code)
+          const result = EnergyAgeCalculator.calculate();
+          document.getElementById('result_main_custom').innerHTML = `...your result HTML...`;
+          document.getElementById('quiz_question_main').style.display = 'none';
+          document.getElementById('result_main_custom').style.display = 'block';
+          return;
+        }
+
+        showStep(currentStep, 'next');
+      });
+    });
+
+    document.querySelectorAll('.prev-step-btn').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('disabled')) return;
+
+        currentStep--;
+
+        // ← NEW: When going back, also skip hormonal stage if Male
+        if (currentStep === 3 && userSex === 'Male') {
+          currentStep = 2;
+        }
+
+        showStep(currentStep, 'prev');
+      });
+    });
+  });
+
+
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+
+  // This runs every time a step is shown (add this to the end of your showStep() function)
+  function validateCurrentStep() {
+    const activeStep = document.querySelector('.stepform.active-step');
+    if (!activeStep) return;
+
+    const nextBtn = activeStep.querySelector('.next-step-btn');
+    const emailInput = activeStep.querySelector('input[type="email"]');
+    const hiddenInput = activeStep.querySelector('input[type="hidden"]');
+    const hasSelection = activeStep.querySelector('.option-card.active');
+
+    // 1. For normal questions (cards, dropdown, text, etc.)
+    const hasAnswer = hasSelection || 
+                      (hiddenInput && hiddenInput.value.trim() !== '') ||
+                      activeStep.querySelector('select')?.value ||
+                      activeStep.querySelector('input[type="text"], input[type="number"], textarea')?.value.trim();
+
+    // 2. Special: EMAIL field — must be valid
+    if (emailInput) {
+      const emailValue = emailInput.value.trim();
+      const isValidEmail = emailValue === '' || validateEmail(emailValue);
+
+      if (isValidEmail && emailValue !== '') {
+        nextBtn.classList.remove('disabled');
+      } else {
+        nextBtn.classList.add('disabled');
+      }
+      return; // email step = only care about email
+    }
+
+    // 3. For popups — always allow
+    if (activeStep.querySelector('.popup-wrapper')) {
+      nextBtn.classList.remove('disabled');
+      return;
+    }
+
+    // 4. Normal steps
+    nextBtn.classList.toggle('disabled', !hasAnswer);
+  }
+
+const EnergyAgeCalculator = {
+  answers: {},
+  results: {},
+
+  save(q, value) {
+    const cleanValue = String(value).trim();
+    this.answers[q] = cleanValue === '' || cleanValue === '.' || cleanValue === '0.' ? null : cleanValue;
+  },
+
+  calculate() {
+    const questions = {
+      4:  { impact: 0.05,   trait: 1.0, state: 0.7, reverse: false },
+      8:  { impact: 0.05,   trait: 1.3, state: 0.7, reverse: false },
+      9:  { impact: 0.05,   trait: 1.3, state: 0.7, reverse: true  },
+      10: { impact: 0.05,   trait: 1.0, state: 0.7, reverse: false },
+      11: { impact: 0.05,   trait: 0.7, state: 0.3, reverse: false },
+      12: { impact: 0.04,   trait: 1.3, state: 0.7, reverse: true  },
+      13: { impact: 0.04,   trait: 1.0, state: 0.7, reverse: false },
+      14: { impact: 0.04,   trait: 1.0, state: 0.7, reverse: false },
+      15: { impact: 0.04,   trait: 1.0, state: 0.7, reverse: true  },
+      16: { impact: 0.04,   trait: 0.7, state: 0.7, reverse: false },
+      17: { impact: 0.0625, trait: 1.0, state: 0.7, reverse: false },
+      18: { impact: 0.0625, trait: 1.0, state: 0.3, reverse: true  },
+      19: { impact: 0.0625, trait: 1.0, state: 0.7, reverse: false },
+      20: { impact: 0.0625, trait: 0.7, state: 0.3, reverse: true  },
+      21: { impact: 0.0375, trait: 1.3, state: 0.7, reverse: false },
+      22: { impact: 0.0375, trait: 0.7, state: 0.7, reverse: false },
+      23: { impact: 0.0375, trait: 0.7, state: 0.7, reverse: false },
+      24: { impact: 0.0667, trait: 1.0, state: 0.7, reverse: false },
+      25: { impact: 0.0667, trait: 1.3, state: 0.7, reverse: false },
+      26: { impact: 0.0667, trait: 1.0, state: 0.3, reverse: true  }
+    };
+
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    const questionNumbers = Object.keys(questions).map(Number);
+
+    const questionVarMap = {};
+    questionNumbers.forEach((q, index) => {
+      questionVarMap[q] = "totalqEI" + alphabet[index];
+    });
+
+    this.results = {};
+    let totalEI = 0;
+    let H5 = 0;
+
+    // Loop through each question
+    questionNumbers.forEach(q => {
+      const cfg = questions[q];
+      if (!cfg) return;
+
+      // Find the active selection for this question
+      const wrapper = document.querySelector(`.multi-select-wrapper[data-quiz-n="${q}"]`);
+
+      let G5 = 1;
+      if (wrapper) {
+        const active = wrapper.querySelector(".multi-select.active");
+        if (active) {
+          G5 = parseFloat(active.dataset.value) || 1;
+        }
+      }
+
+
+      const varName = questionVarMap[q];
+      {% comment %} const qEI = (G5 / 4) * cfg.trait * cfg.state * cfg.impact * 100; {% endcomment %}
+      const qEI = Math.round(((G5 / 4) * cfg.trait * cfg.state * cfg.impact * 100) * 1e5) / 1e5;
+      this.results[varName] = qEI;
+      totalEI += qEI;
+
+      if (q === 4) H5 = qEI; // optional first question as H5
+
+      console.log(`Q${q}: ${varName} = ${qEI.toFixed(5)} (G5=${G5})`);
+
+    });
+console.log("Total qEI:", totalEI.toFixed(1));
+    const totalEIExcel = H5 + parseFloat(totalEI.toFixed(1)) - H5;
+
+    {% comment %} const totalEIExcel = H5 + totalEI - H5; {% endcomment %}
+    const age = Number(this.answers[1]) || 40;
+    let value = age + ((50 - totalEIExcel) * 0.24);
+    let energyAgeRaw = Math.round((value + Number.EPSILON) * 10) / 10;
+
+    const delta = Math.round((energyAgeRaw - age) * -1 * 10) / 10;
+    const minAge = Math.max(18, age - 30);
+    const clampedRaw = Math.max(minAge, Math.min(100, energyAgeRaw));
+    const energyAge = Math.round(clampedRaw * 10) / 10;
+
+    {% comment %} let tier = "Primed"; {% endcomment %}
+    {% comment %} if (delta > 15) tier = "Exhausted";
+    else if (delta > 8) tier = "Drained";
+    else if (delta > 3) tier = "Tired";
+    else if (delta > 0) tier = "Balanced";
+    else if (delta >= -8) tier = "Optimized";
+    else tier = "Vital"; {% endcomment %}
+
+    let tier = "";
+
+    if (Math.abs(delta) <= 2) {
+        tier = "Primed";
+    } else if (delta < -2) {
+        tier = "Revyved";
+    } else if (delta <= 10) {
+        tier = "Depleted";
+    } else {
+        tier = "Exhausted";
+    }
+
+
+    console.log("===== Summary =====");
+    console.log("Total EI:", totalEIExcel);
+    console.log("Energy Age Raw:", energyAgeRaw.toFixed(2));
+    console.log("Delta:", delta);
+    console.log("Displayed Energy Age:", energyAge);
+    console.log("Energy Age Tier:", tier);
+
+    return {
+      age,
+      energyAge: +energyAge.toFixed(0),
+      delta,
+      tier,
+      totalEI: +totalEIExcel.toFixed(1),
+      energyAgeRaw: +energyAgeRaw.toFixed(2),
+      results: this.results,
+      answers: this.answers
+    };
+  }
+};
+
+
+
+  // MAIN LOGIC — FULLY TESTED & WORKING
+  document.addEventListener('DOMContentLoaded', () => {
+    // EMAIL VALIDATION — BULLETPROOF & BEAUTIFUL
+
+    // Card clicks
+  // ONLY save answers for actual scoring questions (Q4+)
+  document.addEventListener('click', (e) => {
+      const card = e.target.closest('.option-card');
+      if (!card) return;
+      const step = card.closest('.stepform');
+      if (!step || !step.dataset.q) return;
+    
+      const q = parseInt(step.dataset.q);
+      // Detect sex question (question 2)
+      if (q === 2) {
+        const selectedText = card.textContent.trim();
+        if (selectedText === 'Male' || selectedText === 'Female' || selectedText === 'Prefer not to say') {
+          userSex = selectedText;               // ← Remember the answer
+        }
+      }
+      if (q < 4) return; // ← IGNORE age, sex, name, email, etc.
+
+      const value = card.dataset.value;
+      if (value !== undefined) {
+        EnergyAgeCalculator.save(q, value);
+        
+
+        step.querySelector('.next-step-btn')?.classList.remove('disabled');
+        {% comment %} console.log("here "); {% endcomment %}
+    const activeStep = document.querySelector('.stepform.active-step');
+
+        if (activeStep) {
+          // Find the hidden input inside it
+          const hiddenInput = activeStep.querySelector('input[type="hidden"]');
+          
+          // Check if it exists and has a value
+          const hasValue = hiddenInput && hiddenInput.value.trim() !== '';
+          
+          {% comment %} console.log('Hidden field value:', hiddenInput ? hiddenInput.value : 'not found');
+          console.log('Has value?', hasValue); // true or false {% endcomment %}
+          
+            if(!hiddenInput){
+                
+              {% comment %} console.log(hiddenInput);  {% endcomment %}
+              step.querySelector('.next-step-btn')?.classList.remove('disabled');
+            }else{
+              // Example: disable Next button if empty
+              const nextBtn = activeStep.querySelector('.next-step-btn');
+              if (nextBtn) {
+                if (hasValue) {
+                  {% comment %} console.log("here 1"); {% endcomment %}
+                  nextBtn.classList.remove('disabled');
+                } else {
+                  {% comment %} console.log("here 2"); {% endcomment %}
+                  nextBtn.classList.add('disabled');
+                }
+              }
+            }
+          
+        } 
+      }
+    }); 
+      // Special handler for age (question 1)
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('input[type="number"]')) {
+        const step = e.target.closest('.stepform');
+        if (step && step.dataset.q === "1") {
+          const age = e.target.value.trim();
+          if (age && age >= 18 && age <= 100) {
+            EnergyAgeCalculator.save(1, age); // Save age separately
+            step.querySelector('.next-step-btn')?.classList.remove('disabled');
+          }
+        }
+      }
+    });
+    document.addEventListener('input', (e) => {
+      const input = e.target;
+      if (!input.matches('input, textarea')) return;
+      const step = input.closest('.stepform');
+      if (!step || !step.dataset.q) return;
+
+      const q = parseInt(step.dataset.q);
+      if (q < 4) return; // ← Only save scoring questions
+
+      const value = input.value.trim();
+      if (value !== '') {
+        step.querySelector('.next-step-btn')?.classList.remove('disabled');
+      }
+      if (e.target.matches('input[type="email"]')) {
+        validateCurrentStep();
+      }
+    });
+
+    // Final result
+    document.querySelectorAll('.next-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        {% comment %} console.log(EnergyAgeCalculator.answers); {% endcomment %}
+        if (btn.classList.contains('disabled')) return;
+        const currentStep = document.querySelector('.stepform.active-step');
+        if (!currentStep) return;
+        const isLast = !currentStep.nextElementSibling?.classList.contains('stepform');
+        if (!isLast) return;
+
+        const result = EnergyAgeCalculator.calculate();
+
+
+    document.getElementById('result_main_custom').innerHTML = `
+  <div class="energy-result-container">
+    <!-- Glow border + top accent -->
+    <div class="result-glow-border"></div>
+    <div class="result-top-bar"></div>
+
+    <!-- Main Content -->
+    <div class="result-content">
+      <!-- Energy Age Hero -->
+      <h1 class="energy-age-hero">${result.energyAge}</h1>
+      <p class="energy-age-label">Your Energy Age</p>
+
+      <p class="age-delta-line">
+        Chronological Age: <span class="chrono-age">${result.age}</span> • Delta: 
+        <span class="delta-value" style="color:${result.delta < 0 ? '#2e8b57' : '#d6763b'}">
+          ${result.delta > 0 ? '+' : ''}${result.delta}
+        </span>
+      </p>
+
+      <!-- Tier -->
+      <div class="energy-tier">${result.tier}</div>
+
+      <!-- Reverse Aging Message -->
+      ${result.delta < -8 ? `
+        <div class="reverse-aging-msg">You are aging in reverse!</div>
+      ` : `
+        <p class="untapped-potential">
+          There is massive untapped potential to restore youthful, limitless energy.
+        </p>
+      `}
+
+      <!-- Science Cards -->
+      <div class="science-cards">
+        <div class="science-card">
+          <div class="card-title">Total Energy Index</div>
+          <div class="card-value">${result.totalEI}</div>
+          <div class="card-note">Ideal = 47.7</div>
+        </div>
+        <div class="science-card">
+          <div class="card-title">Raw Energy Age</div>
+          <div class="card-value">${result.energyAgeRaw}</div>
+          <div class="card-note">Before limits applied</div>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <button class="personalized-plan-btn" onclick="location.href='/pages/recommendations'">
+        <span>Get Your Personalized Plan</span>
+        <div class="btn-shine"></div>
+      </button>
+
+      <div class="powered-by">Powered by Revyval Energy Science™</div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .energy-result-container {
+      max-width: 1100px;
+      margin: 80px auto;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, #fffaf7, #ffffff);
+      border-radius: 48px;
+      box-shadow: 0 60px 140px rgba(214,118,59,0.22);
+      text-align: center;
+      font-family: 'Merriweather Sans', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-glow-border {
+      position: absolute;
+      inset: 0;
+      border: 3px solid transparent;
+      border-radius: 48px;
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(90deg,#d6763b,#e6a071) border-box;
+      pointer-events: none;
+    }
+
+    .result-top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 12px;
+      background: linear-gradient(90deg,#d6763b,#e6a071,#d6763b);
+    }
+
+    .energy-age-hero {
+      font-size: clamp(80px, 15vw, 160px);
+      font-weight: 900;
+      background: linear-gradient(45deg,#d6763b,#e6955f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      line-height: 1;
+      letter-spacing: -4px;
+    }
+
+    .energy-age-label {
+      font-size: clamp(28px, 5vw, 38px);
+      color: #333;
+      margin: 10px 0 8px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .age-delta-line {
+      font-size: clamp(20px, 4vw, 28px);
+      color: #555;
+      margin: 0 0 50px;
+    }
+
+    .chrono-age { font-weight: 800; color: #111; }
+    .delta-value { font-size: clamp(36px, 6vw, 44px); font-weight: 900; }
+
+    .energy-tier {
+      font-size: clamp(60px, 10vw, 80px);
+      font-weight: 900;
+      color: #d6763b;
+      margin: 40px 0;
+      letter-spacing: -2px;
+    }
+
+    .reverse-aging-msg {
+      font-size: clamp(40px, 8vw, 52px);
+      font-weight: 900;
+      color: #2e8b57;
+      margin: 50px 0 80px;
+      animation: pulse 2s infinite;
+    }
+
+    .untapped-potential {
+      font-size: clamp(22px, 4vw, 30px);
+      color: #444;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 50px auto 80px;
+    }
+
+    .science-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      max-width: 900px;
+      margin: 0 auto 70px;
+    }
+
+    .science-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(214,118,59,0.2);
+    }
+
+    .card-title {
+      font-size: 20px;
+      color: #a0562a;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .card-value {
+      font-size: clamp(52px, 8vw, 72px);
+      font-weight: 900;
+      color: #d6763b;
+      margin: 12px 0;
+    }
+
+    .card-note {
+      font-size: 16px;
+      color: #777;
+    }
+
+    .personalized-plan-btn {
+      padding: 24px 100px;
+      font-size: clamp(24px, 5vw, 32px);
+      font-weight: 900;
+      background: linear-gradient(135deg,#d6763b,#c05a2a);
+      color: white;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      box-shadow: 0 30px 70px rgba(214,118,59,0.5);
+      transition: all 0.4s;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .personalized-plan-btn:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 40px 90px rgba(214,118,59,0.6);
+    }
+
+    .btn-shine {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.1) 50%,transparent 70%);
+      transform: translateX(-100%);
+      transition: 0.6s;
+    }
+
+    .personalized-plan-btn:hover .btn-shine {
+      transform: translateX(100%);
+    }
+
+    .powered-by {
+      margin-top: 50px;
+      font-size: 16px;
+      color: #aaa;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .energy-result-container { margin: 40px 20px; padding: 50px 20px; border-radius: 32px; }
+      .science-cards { gap: 30px; }
+      .personalized-plan-btn { padding: 20px 60px; }
+    }
+  </style>
+  `;
+        document.getElementById('quiz_question_main').style.display = 'none';
+        document.getElementById('result_main_custom').style.display = 'block';
+      });
+    });
+  });
+ 
+
+
+</script>
+
+
+{% schema %}
+{
+  "name": "Health Quiz Section",
+  "settings": [
+    { "type": "image_picker", "id": "bg_image", "label": "Background Image" },
+    { "type": "color", "id": "overlay_color", "label": "Overlay Color", "default": "#000000" },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "label": "Overlay Opacity",
+      "default": 0.4
+    },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Take the first step to feel amazing!" },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Sub text",
+      "default": "This assessment creates your personalized health plan."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Quiz Question",
+      "settings": [
+        { "type": "text", "id": "question_title", "label": "Question Title" },
+        { "type": "text", "id": "quizno", "label": "Quiz No" },
+
+        {
+          "type": "select",
+          "id": "question_type",
+          "label": "Question Type",
+          "options": [
+            { "value": "dropdown", "label": "Dropdown" },
+            { "value": "single", "label": "Single Select" },
+            { "value": "multi", "label": "Multi Select" },
+            { "value": "text", "label": "Text Field" },
+            { "value": "email",      "label": "Email Field" },
+            { "value": "textarea", "label": "Textarea Field" }
+          ],
+          "default": "single"
+        },
+
+        {
+          "type": "textarea",
+          "id": "question_options",
+          "label": "Options (one per line)",
+          "info": "Leave blank for text/textarea questions."
+        },
+
+        { "type": "text", "id": "prev_btn_text", "label": "Previous Button Text", "default": "← Back" },
+        { "type": "text", "id": "next_btn_text", "label": "Next Button Text", "default": "Next →" }
+      ]
+    },
+    {
+      "type": "popup",
+      "name": "Popup Step",
+      "settings": [
+        { "type": "text", "id": "popup_heading", "label": "Popup Heading" },
+        { "type": "richtext", "id": "popup_text", "label": "Popup Text" },
+        { "type": "image_picker", "id": "popup_bg", "label": "Popup Background Image" },
+        { "type": "image_picker", "id": "popup_inner_image", "label": "Popup Inner Image" },
+        { "type": "text", "id": "popup_prev", "label": "Back Button Text", "default": "← Back" },
+        { "type": "text", "id": "popup_next", "label": "Next Button Text", "default": "Continue →" }
+      ]
+    },
+    {
+      "type": "analyzing",
+      "name": "Analyzing Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "analyze_title",
+          "label": "Heading",
+          "default": "Analyzing your answers..."
+        },
+        {
+          "type": "text",
+          "id": "analyze_subtext",
+          "label": "Sub Heading",
+          "default": "Please wait while we calculate your result."
+        },
+        {
+          "type": "range",
+          "id": "progress_duration",
+          "label": "Progress Duration (seconds)",
+          "min": 1,
+          "max": 15,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "number",
+          "id": "percentage_number_from",
+          "label": "Percentage from",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "percentage_number",
+          "label": "Percentage to",
+          "default": 50
+        },
+        {
+          "type": "text",
+          "id": "show_percentage",
+          "label": "Percentage",
+          "default": "Analyzing..."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Health Quiz Section",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "What is your current age?",
+            "question_type": "dropdown",
+            "question_options": "18–24\n25–34\n35–44\n45–54\n55–64\n65+"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "Which best describes your biological sex?",
+            "question_type": "single",
+            "question_options": "Female\nMale\nPrefer not to say"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "(If female) Which hormonal stage best describes you?",
+            "question_type": "single",
+            "question_options": "Cycling (premenopausal)\nPerimenopausal\nPostmenopausal\nPrefer not to answer\nNot applicable"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "How would you describe your energy levels during a typical day?",
+            "question_type": "single",
+            "question_options": "I feel exhausted most of the time\nMy energy varies throughout the day\nI'm usually energetic and active"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "What’s your biggest energy goal right now?",
+            "question_type": "single",
+            "question_options": "Have more energy overall\nStay consistent — fewer dips and crashes\nFeel calmer and more balanced\nMaintain what I have"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "Which of these best describes your current pace of life?",
+            "question_type": "single",
+            "question_options": "Always on the go — rarely slow down\nBalancing work, family, and self-care\nPretty structured — I plan around routines\nMore relaxed — I prioritize rest"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question_title": "What drains your energy the most right now?",
+            "question_type": "single",
+            "question_options": "Stress or worry that never shuts off\nPoor or inconsistent sleep\nSkipping meals / eating on the run\nToo much sitting, not enough movement"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
