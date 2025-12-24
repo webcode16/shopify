@@ -1,0 +1,58 @@
+<button class="add_to_cart_btn" data-variant-id="47343095054591">
+  Add to cart
+</button>
+<script>
+    const addToCartBtn = document.querySelector('.add_to_cart_btn');
+
+if (addToCartBtn) {
+  addToCartBtn.addEventListener('click', async function () {
+    const variantId = this.dataset.variantId;
+    const cart =
+      document.querySelector('cart-notification') ||
+      document.querySelector('cart-drawer');
+
+    this.classList.add('loading');
+
+    try {
+      const formData = new FormData();
+      formData.append('id', variantId);
+      formData.append('quantity', 1);
+
+      if (cart) {
+        formData.append(
+          'sections',
+          cart.getSectionsToRender().map(section => section.id)
+        );
+        formData.append('sections_url', window.location.pathname);
+      }
+
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+      });
+
+      const result = await response.json();
+      console.log('Variant Added:', result);
+
+      if (result.status) {
+        alert(result.description);
+        return;
+      }
+
+      if (cart) {
+        cart.classList.remove('is-empty');
+        cart.renderContents(result);
+        cart.open();
+      }
+
+    } catch (err) {
+      console.error('Add to Cart Error:', err);
+    } finally {
+      this.classList.remove('loading');
+    }
+  });
+}
+</script>
